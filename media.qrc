@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>vidiot_bg.png</file>
+        <file>vidiot_icon.png</file>
+    </qresource>
+</RCC>
