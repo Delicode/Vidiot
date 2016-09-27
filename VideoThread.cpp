@@ -457,7 +457,7 @@ void CaptureProcessor::process()
 {
     t.start();
 
-    if(ping_required)
+    if(ping_required && !ping_time.isValid())
         ping_time.start();
 
     qint64 capture_start = 0;
@@ -469,6 +469,7 @@ void CaptureProcessor::process()
 
     if(ping_time.isValid() && ping_time.elapsed() > 5000) {
         emit quit();
+        qApp->quit();
         return;
     }
 

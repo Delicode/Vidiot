@@ -29,7 +29,7 @@ public slots:
             emit stop();
             qApp->quit();
         }
-        else if(line.startsWith("seek:") || line.startsWith("seekstop:")) {
+        else if(line.startsWith("seek:")) {
             line.remove('\r');
             line.remove('\n');
 
