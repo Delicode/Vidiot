@@ -10,7 +10,7 @@ void FeedOutput::ensure(int width, int height)
 
     gl->makeCurrent();
 
-#ifdef SPOUT
+#ifdef _WIN32
     if(created) {
         // The server will be ok after the next texture send
     }
@@ -42,12 +42,14 @@ void FeedOutput::ensure(int width, int height)
                 std::cout << "Error creating spout server" << std::endl;
         }
     }
+#else
+    /* TODO: syphon */
 #endif
 
     gl->doneCurrent();
 }
 
-void FeedOutput::send(unsigned int texid, int width, int height, bool flip)
+void FeedOutput::sendTexture(unsigned int texid, int width, int height, bool flip)
 {
     if(width > 0 && height > 0)
         ensure(width, height);
@@ -55,12 +57,15 @@ void FeedOutput::send(unsigned int texid, int width, int height, bool flip)
     if(!created)
         return;
 
-#ifdef SPOUT
     gl->makeCurrent();
+#ifdef _WIN32
     spoutserv.SendTexture(texid, GL_TEXTURE_2D, width, height, flip);
+#else
+    /* TODO: syphon */
+#endif
+
     glFinish();
     gl->doneCurrent();
-#endif
 }
 
 QStringList FeedOutput::listSources(bool list_self)

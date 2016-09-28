@@ -32,7 +32,6 @@ public:
     QOpenGLWidget *gl;
 
     VideoPlayer *player;
-    //VideoRenderer *renderer;
     TextureUploader *uploader;
     TextureDownloader *downloader;
     FeedInput *feed_input;

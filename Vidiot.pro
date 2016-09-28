@@ -42,13 +42,12 @@ else {
 }
 
 win32: {
-	DEFINES += SPOUT
 	SPOUTDIR = external/Spout
 	INCLUDEPATH += $${SPOUTDIR}
 	LIBS += -lShell32 -lUser32 -lOpenGL32 -lGdi32
 	LIBS += -lStrmiids -lQuartz -lole32 -luuid -loleaut32
 
-	RC_FILE = info.rc
+	RC_FILE = resources/info.rc
 
 	!contains(QMAKE_TARGET.arch, x86_64) {
 		LIBS += -L"../Vidiot/lib/QtAV/lib/win32" -L"../Vidiot/lib/ffmpeg/win32"
@@ -81,10 +80,15 @@ win32: {
 				$${SPOUTDIR}/SpoutSharedMemory.h
 }
 
+macx {
+	QMAKE_INFO_PLIST = resources/MyInfo.plist
+	LIBS += -framework Syphon
+}
+
 DISTFILES += \
-	ui.qml \
-	SimpleButton.qml \
-	SimpleList.qml
+	qml/main.qml \
+	qml/SimpleButton.qml \
+	qml/SimpleList.qml
 
 RESOURCES += qml.qrc \
     media.qrc

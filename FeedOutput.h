@@ -7,7 +7,7 @@
 #include <QApplication>
 #include <QDebug>
 
-#ifdef SPOUT
+#ifdef _WIN32
 #include "external/Spout/Spout.h"
 #endif
 
@@ -37,7 +37,7 @@ public:
     QStringList listSources(bool list_self = false);
 
 public slots:
-    void send(unsigned int texid, int width = -1, int height = -1, bool flip = true);
+    void sendTexture(unsigned int texid, int width = -1, int height = -1, bool flip = true);
     void setResolution(QString resolution_str) {resolution = resolution_str;}
 
 private:
@@ -69,7 +69,7 @@ private:
 private:
     bool created;
     int w, h;
-#ifdef SPOUT
+#ifdef _WIN32
     SpoutSender spoutserv;
 #endif
     QString out_name;

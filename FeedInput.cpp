@@ -4,7 +4,7 @@
 #include <QThread>
 
 FeedInput::FeedInput(QString name, QOpenGLWidget *glwid) : QObject(NULL),
-    spoutreceiver_created(false),
+    feedreceiver_created(false),
     framecount(0),
     fps(30.f),
     error(false),
@@ -23,7 +23,7 @@ FeedInput::FeedInput(QString name, QOpenGLWidget *glwid) : QObject(NULL),
         output_fbo[i] = NULL;
 
     if(name.contains("?")) {
-        spout_name = name.split("?").first();
+        feed_name = name.split("?").first();
         QString fps_str = name.split("?").last();
         fps_str.remove("!");
         fps_str.remove("*");
@@ -35,7 +35,7 @@ FeedInput::FeedInput(QString name, QOpenGLWidget *glwid) : QObject(NULL),
             fps = f;
     }
     else {
-        spout_name = name;
+        feed_name = name;
     }
 }
 
@@ -43,34 +43,49 @@ FeedInput::FeedInput(QString name, QOpenGLWidget *glwid) : QObject(NULL),
 
 FeedInput::~FeedInput()
 {
-    if(spoutreceiver_created)
+    if(feedreceiver_created)
         spoutreceiver.ReleaseReceiver();
 }
 
-void FeedInput::ensureSpout()
+void FeedInput::ensureFeed()
 {
-    if(!spoutreceiver_created) {
+#ifdef _WIN32
+    if(!feedreceiver_created) {
         gl->makeCurrent();
 
         char name[256];
-        sprintf(name, spout_name.toLocal8Bit().data());
+        sprintf(name, feed_name.toLocal8Bit().data());
 
-        spoutreceiver_created = spoutreceiver.CreateReceiver(name, input_width, input_height);
+        feedreceiver_created = spoutreceiver.CreateReceiver(name, input_width, input_height);
 
-        if(spoutreceiver_created) {
+        if(feedreceiver_created) {
             qDebug() << "Spout server created";
         }
         else {
             spoutreceiver.SetDX9(true);
-            spoutreceiver_created = spoutreceiver.CreateReceiver(name, input_width, input_height);
+            feedreceiver_created = spoutreceiver.CreateReceiver(name, input_width, input_height);
 
-            if(spoutreceiver_created)
+            if(feedreceiver_created)
                 qDebug() << "Spout receiver initialized in DX9 mode.";
             else
                 qDebug() << "Spout receiver couldn't be initialized.";
         }
         gl->doneCurrent();
     }
+#else
+    /* TODO: syphon */
+#endif
+}
+
+bool FeedInput::receiveFeed()
+{
+#ifdef _WIN32
+    char name[256];
+    sprintf(name, feed_name.toLocal8Bit().data());
+    return spoutreceiver.ReceiveTexture(name, input_width, input_height, input_fbo->texture(), GL_TEXTURE_2D, true);
+#else
+    /* TODO: syphon */
+#endif
 }
 
 void FeedInput::ensureFBO()
@@ -101,10 +116,10 @@ void FeedInput::ensureFBO()
 
 void FeedInput::capture(QString resolution)
 {
-    if(!spoutreceiver_created) {
-        ensureSpout();
+    if(!feedreceiver_created) {
+        ensureFeed();
 
-        if(!spoutreceiver_created) {
+        if(!feedreceiver_created) {
             error = true;
             return;
         }
@@ -159,9 +174,7 @@ void FeedInput::capture(QString resolution)
     gl->makeCurrent();
     ensureFBO();
 
-    char name[256];
-    sprintf(name, spout_name.toLocal8Bit().data());
-    if(!spoutreceiver.ReceiveTexture(name, input_width, input_height, input_fbo->texture(), GL_TEXTURE_2D, true)) {
+    if(!receiveFeed()) {
         qDebug() << "Error receiving texture";
         gl->doneCurrent();
         return;

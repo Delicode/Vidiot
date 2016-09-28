@@ -6,7 +6,10 @@
 #include <QMutex>
 #include <QOpenGLBuffer>
 #include <QElapsedTimer>
-#include "External/Spout/Spout.h"
+
+#ifdef _WIN32
+    #include "External/Spout/Spout.h"
+#endif
 
 class FeedInput : public QObject
 {
@@ -24,13 +27,14 @@ public:
 
     void start();
 
-    void ensureSpout();
+    void ensureFeed();
+    bool receiveFeed();
     void ensureFBO();
     void capture(QString resolution);
 
 
 
-    QString spout_name;
+    QString feed_name;
 
     unsigned int input_width, input_height;
     unsigned int output_width, output_height;
@@ -48,8 +52,11 @@ public:
     float getSleeptime_ms();
 
 private:
-    bool spoutreceiver_created;
+    bool feedreceiver_created;
+
+    #ifdef _WIN32
     SpoutReceiver spoutreceiver;
+    #endif
 
     QElapsedTimer t;
 };

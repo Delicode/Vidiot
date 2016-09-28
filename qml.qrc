@@ -1,9 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file>ui.qml</file>
-        <file>ionicons.js</file>
-        <file>ionicons.ttf</file>
-        <file>SimpleButton.qml</file>
-        <file>SimpleList.qml</file>
+        <file>qml/ionicons.js</file>
+        <file>qml/ionicons.ttf</file>
+        <file>qml/main.qml</file>
+        <file>qml/SimpleButton.qml</file>
+        <file>qml/SimpleList.qml</file>
     </qresource>
 </RCC>

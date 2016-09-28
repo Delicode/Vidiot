@@ -10,217 +10,222 @@
 #include <QSettings>
 #include <QDebug>
 
-#include "Spout.h"
-
 #include <iostream>
 
 #include "FeedOutput.h"
 
 
 #ifdef _WIN32
+    #include "Spout.h"
 
-#include <windows.h>
-#include <strmif.h>
-#include <dshow.h>
-#include <dvdmedia.h>
+    #include <windows.h>
+    #include <strmif.h>
+    #include <dshow.h>
+    #include <dvdmedia.h>
 
-DEFINE_GUID(CLSID_VideoInputDeviceCategory,0x860bb310,0x5d01,0x11d0,0xbd,0x3b,0x00,0xa0,0xc9,0x11,0xce,0x86);
+    DEFINE_GUID(CLSID_VideoInputDeviceCategory,0x860bb310,0x5d01,0x11d0,0xbd,0x3b,0x00,0xa0,0xc9,0x11,0xce,0x86);
 
-void _FreeMediaType(AM_MEDIA_TYPE& mt)
-{
-    if (mt.cbFormat != 0)
+    void _FreeMediaType(AM_MEDIA_TYPE& mt)
     {
-        CoTaskMemFree((PVOID)mt.pbFormat);
-        mt.cbFormat = 0;
-        mt.pbFormat = NULL;
-    }
-    if (mt.pUnk != NULL)
-    {
-        // pUnk should not be used.
-        mt.pUnk->Release();
-        mt.pUnk = NULL;
-    }
-}
-
-
-QStringList CaptureProcessor::listDevices()
-{
-    QStringList deviceNames;
-
-    ICreateDevEnum *pDevEnum;
-    HRESULT hr = CoCreateInstance(CLSID_SystemDeviceEnum,0,CLSCTX_INPROC_SERVER,IID_ICreateDevEnum,(void**)&pDevEnum);
-    if(FAILED(hr))
-        return deviceNames;
-    IEnumMoniker *pEnum;
-    hr = pDevEnum->CreateClassEnumerator(CLSID_VideoInputDeviceCategory,&pEnum,0);
-
-    if(FAILED(hr))
-    {
-        return deviceNames;
-    }
-    IMoniker *pMoniker = NULL;
-    while(S_OK == pEnum->Next(1,&pMoniker,NULL))
-    {
-        IPropertyBag *pPropBag;
-        LPOLESTR str = 0;
-        hr = pMoniker->GetDisplayName(0,0,&str);
-        if(SUCCEEDED(hr))
+        if (mt.cbFormat != 0)
         {
-            hr = pMoniker->BindToStorage(0,0,IID_IPropertyBag,(void**)&pPropBag);
+            CoTaskMemFree((PVOID)mt.pbFormat);
+            mt.cbFormat = 0;
+            mt.pbFormat = NULL;
+        }
+        if (mt.pUnk != NULL)
+        {
+            // pUnk should not be used.
+            mt.pUnk->Release();
+            mt.pUnk = NULL;
+        }
+    }
+
+
+    QStringList CaptureProcessor::listDevices()
+    {
+        QStringList deviceNames;
+
+        ICreateDevEnum *pDevEnum;
+        HRESULT hr = CoCreateInstance(CLSID_SystemDeviceEnum,0,CLSCTX_INPROC_SERVER,IID_ICreateDevEnum,(void**)&pDevEnum);
+        if(FAILED(hr))
+            return deviceNames;
+        IEnumMoniker *pEnum;
+        hr = pDevEnum->CreateClassEnumerator(CLSID_VideoInputDeviceCategory,&pEnum,0);
+
+        if(FAILED(hr))
+        {
+            return deviceNames;
+        }
+        IMoniker *pMoniker = NULL;
+        while(S_OK == pEnum->Next(1,&pMoniker,NULL))
+        {
+            IPropertyBag *pPropBag;
+            LPOLESTR str = 0;
+            hr = pMoniker->GetDisplayName(0,0,&str);
             if(SUCCEEDED(hr))
             {
-                VARIANT var;
-                VariantInit(&var);
-
-                hr = pPropBag->Read(L"Description", &var, 0);
-                if (FAILED(hr))
+                hr = pMoniker->BindToStorage(0,0,IID_IPropertyBag,(void**)&pPropBag);
+                if(SUCCEEDED(hr))
                 {
-                    hr = pPropBag->Read(L"FriendlyName", &var, 0);
-                }
+                    VARIANT var;
+                    VariantInit(&var);
 
-                if(SUCCEEDED(hr)) {
-                    QString deviceName = QString::fromWCharArray(var.bstrVal);
+                    hr = pPropBag->Read(L"Description", &var, 0);
+                    if (FAILED(hr))
+                    {
+                        hr = pPropBag->Read(L"FriendlyName", &var, 0);
+                    }
 
-                    QStringList deviceModes;
-
-                    IBaseFilter *pFilter;
-                    hr = pMoniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)&pFilter);
                     if(SUCCEEDED(hr)) {
-                        vector<IPin*> pins;
-                        IEnumPins *EnumPins;
-                        pFilter->EnumPins(&EnumPins);
-                        pins.clear();
-                        IPin *pin;
-                        while(S_OK == EnumPins->Next(1,&pin,NULL))
-                        {
-                            pins.push_back(pin);
-                            pin->Release();
-                        }
-                        EnumPins->Release();
+                        QString deviceName = QString::fromWCharArray(var.bstrVal);
 
-                        PIN_INFO pInfo;
-                        for(int i=0;i<pins.size();i++)
-                        {
-                            pins[i]->QueryPinInfo(&pInfo);
+                        QStringList deviceModes;
 
-                            //qDebug() << "Pin" << i  << "dir" << pInfo.dir << QString::fromWCharArray(pInfo.achName);
-
-                            if(pInfo.dir!=1 || QString::fromWCharArray(pInfo.achName) != "Capture" && QString::fromWCharArray(pInfo.achName) != "Output" && QString::fromWCharArray(pInfo.achName) != "Spout Cam")
-                                continue;
-
-                            IEnumMediaTypes *emt=NULL;
-                            pins[i]->EnumMediaTypes(&emt);
-
-                            AM_MEDIA_TYPE *pmt;
-
-                            while(S_OK == emt->Next(1,&pmt,NULL))
+                        IBaseFilter *pFilter;
+                        hr = pMoniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)&pFilter);
+                        if(SUCCEEDED(hr)) {
+                            vector<IPin*> pins;
+                            IEnumPins *EnumPins;
+                            pFilter->EnumPins(&EnumPins);
+                            pins.clear();
+                            IPin *pin;
+                            while(S_OK == EnumPins->Next(1,&pin,NULL))
                             {
-                                if(pmt->formattype == FORMAT_VideoInfo2 && (pmt->cbFormat >= sizeof(VIDEOINFOHEADER2)) && (pmt->pbFormat != NULL) ) {
-                                    VIDEOINFOHEADER2 *pVIH = (VIDEOINFOHEADER2*)pmt->pbFormat;
-
-                                    QString compression = "raw";
-
-                                    switch(pVIH->bmiHeader.biCompression) {
-                                    case MKTAG('d', 'v', 's', 'd'): compression = "dvvideo"; break;
-                                    case MKTAG('M', 'J', 'P', 'G'):
-                                    case MKTAG('m', 'j', 'p', 'g'): compression = "mjpeg"; break;
-                                    }
-
-                                    REFERENCE_TIME t=pVIH->AvgTimePerFrame; // blocks (100ns) per frame
-                                    int FPS=floor(10000000.0/static_cast<double>(t));
-
-                                    QString mode = QString("%2 x %3 @ %4 fps (%1)").arg(compression).arg(pVIH->bmiHeader.biWidth).arg(pVIH->bmiHeader.biHeight).arg(FPS);
-                                    if(!deviceModes.contains(mode))
-                                        deviceModes.append(mode);
-
-                                }
-                                else if ( (pmt->formattype == FORMAT_VideoInfo) && (pmt->cbFormat >= sizeof(VIDEOINFOHEADER)) && (pmt->pbFormat != NULL) ) {
-                                    VIDEOINFOHEADER *pVIH = (VIDEOINFOHEADER*)pmt->pbFormat;
-
-                                    QString compression = "raw";
-
-                                    switch(pVIH->bmiHeader.biCompression) {
-                                    case MKTAG('d', 'v', 's', 'd'): compression = "dvvideo"; break;
-                                    case MKTAG('M', 'J', 'P', 'G'):
-                                    case MKTAG('m', 'j', 'p', 'g'): compression = "mjpeg"; break;
-                                    }
-
-                                    REFERENCE_TIME t=pVIH->AvgTimePerFrame; // blocks (100ns) per frame
-                                    int FPS=floor(10000000.0/static_cast<double>(t));
-
-                                    QString mode = QString("%2 x %3 @ %4 fps (%1)").arg(compression).arg(pVIH->bmiHeader.biWidth).arg(pVIH->bmiHeader.biHeight).arg(FPS);
-                                    if(!deviceModes.contains(mode))
-                                        deviceModes.append(mode);
-                                }
-                                else {
-                                    OLECHAR* bstrGuid;
-                                    StringFromCLSID(pmt->formattype, &bstrGuid);
-
-                                    //qDebug() << deviceName << QString::fromStdWString(bstrGuid);
-                                }
-
-                                _FreeMediaType(*pmt);
+                                pins.push_back(pin);
+                                pin->Release();
                             }
-                            emt->Release();
+                            EnumPins->Release();
 
-                            int high_res_mode = -1;
-                            int high_res_width = 0;
-                            int high_res_height = 0;
-                            int high_res_fps = 0;
-                            QString high_res_codec = "raw";
+                            PIN_INFO pInfo;
+                            for(int i=0;i<pins.size();i++)
+                            {
+                                pins[i]->QueryPinInfo(&pInfo);
 
-                            //find the high resolution options for the device, prefer compressed feed as it's usually faster to process
+                                //qDebug() << "Pin" << i  << "dir" << pInfo.dir << QString::fromWCharArray(pInfo.achName);
 
+                                if(pInfo.dir!=1 || QString::fromWCharArray(pInfo.achName) != "Capture" && QString::fromWCharArray(pInfo.achName) != "Output" && QString::fromWCharArray(pInfo.achName) != "Spout Cam")
+                                    continue;
+
+                                IEnumMediaTypes *emt=NULL;
+                                pins[i]->EnumMediaTypes(&emt);
+
+                                AM_MEDIA_TYPE *pmt;
+
+                                while(S_OK == emt->Next(1,&pmt,NULL))
+                                {
+                                    if(pmt->formattype == FORMAT_VideoInfo2 && (pmt->cbFormat >= sizeof(VIDEOINFOHEADER2)) && (pmt->pbFormat != NULL) ) {
+                                        VIDEOINFOHEADER2 *pVIH = (VIDEOINFOHEADER2*)pmt->pbFormat;
+
+                                        QString compression = "raw";
+
+                                        switch(pVIH->bmiHeader.biCompression) {
+                                        case MKTAG('d', 'v', 's', 'd'): compression = "dvvideo"; break;
+                                        case MKTAG('M', 'J', 'P', 'G'):
+                                        case MKTAG('m', 'j', 'p', 'g'): compression = "mjpeg"; break;
+                                        }
+
+                                        REFERENCE_TIME t=pVIH->AvgTimePerFrame; // blocks (100ns) per frame
+                                        int FPS=floor(10000000.0/static_cast<double>(t));
+
+                                        QString mode = QString("%2 x %3 @ %4 fps (%1)").arg(compression).arg(pVIH->bmiHeader.biWidth).arg(pVIH->bmiHeader.biHeight).arg(FPS);
+                                        if(!deviceModes.contains(mode))
+                                            deviceModes.append(mode);
+
+                                    }
+                                    else if ( (pmt->formattype == FORMAT_VideoInfo) && (pmt->cbFormat >= sizeof(VIDEOINFOHEADER)) && (pmt->pbFormat != NULL) ) {
+                                        VIDEOINFOHEADER *pVIH = (VIDEOINFOHEADER*)pmt->pbFormat;
+
+                                        QString compression = "raw";
+
+                                        switch(pVIH->bmiHeader.biCompression) {
+                                        case MKTAG('d', 'v', 's', 'd'): compression = "dvvideo"; break;
+                                        case MKTAG('M', 'J', 'P', 'G'):
+                                        case MKTAG('m', 'j', 'p', 'g'): compression = "mjpeg"; break;
+                                        }
+
+                                        REFERENCE_TIME t=pVIH->AvgTimePerFrame; // blocks (100ns) per frame
+                                        int FPS=floor(10000000.0/static_cast<double>(t));
+
+                                        QString mode = QString("%2 x %3 @ %4 fps (%1)").arg(compression).arg(pVIH->bmiHeader.biWidth).arg(pVIH->bmiHeader.biHeight).arg(FPS);
+                                        if(!deviceModes.contains(mode))
+                                            deviceModes.append(mode);
+                                    }
+                                    else {
+                                        OLECHAR* bstrGuid;
+                                        StringFromCLSID(pmt->formattype, &bstrGuid);
+
+                                        //qDebug() << deviceName << QString::fromStdWString(bstrGuid);
+                                    }
+
+                                    _FreeMediaType(*pmt);
+                                }
+                                emt->Release();
+
+                                int high_res_mode = -1;
+                                int high_res_width = 0;
+                                int high_res_height = 0;
+                                int high_res_fps = 0;
+                                QString high_res_codec = "raw";
+
+                                //find the high resolution options for the device, prefer compressed feed as it's usually faster to process
+
+                                for(int i=0; i<deviceModes.length(); i++) {
+                                    QString width = deviceModes.at(i).split(" x ").first();
+                                    QString height = deviceModes.at(i).split(" @ ").first().split(" x ").last();
+                                    QString fps = deviceModes.at(i).split(" @ ").last().split(" fps ").first();
+                                    QString codec = deviceModes.at(i).split("(").last().replace(")", "");
+
+                                    int w = width.toInt();
+                                    int h = height.toInt();
+                                    int f = fps.toInt();
+
+                                    if(high_res_mode < 0 || high_res_width*high_res_height < w*h || (high_res_width*high_res_height == w*h && (codec != "raw" || f > high_res_fps))) {
+                                        high_res_mode = i;
+                                        high_res_width = w;
+                                        high_res_height = h;
+                                        high_res_fps = f;
+                                        high_res_codec = codec;
+                                    }
+                                }
+
+                                if(high_res_mode >= 0)
+                                    deviceModes.replace(high_res_mode, "*" + deviceModes.at(high_res_mode));
+                            }
+
+                            pins.clear();
+                        }
+
+                        if(deviceModes.length() > 1) {
                             for(int i=0; i<deviceModes.length(); i++) {
-                                QString width = deviceModes.at(i).split(" x ").first();
-                                QString height = deviceModes.at(i).split(" @ ").first().split(" x ").last();
-                                QString fps = deviceModes.at(i).split(" @ ").last().split(" fps ").first();
-                                QString codec = deviceModes.at(i).split("(").last().replace(")", "");
-
-                                int w = width.toInt();
-                                int h = height.toInt();
-                                int f = fps.toInt();
-
-                                if(high_res_mode < 0 || high_res_width*high_res_height < w*h || (high_res_width*high_res_height == w*h && (codec != "raw" || f > high_res_fps))) {
-                                    high_res_mode = i;
-                                    high_res_width = w;
-                                    high_res_height = h;
-                                    high_res_fps = f;
-                                    high_res_codec = codec;
-                                }
+                                if(i == 0)
+                                    deviceNames.append("dshow:///" + deviceName + "?!" + deviceModes.at(i));
+                                else
+                                    deviceNames.append("dshow:///" + deviceName + "?" + deviceModes.at(i));
                             }
-
-                            if(high_res_mode >= 0)
-                                deviceModes.replace(high_res_mode, "*" + deviceModes.at(high_res_mode));
                         }
-
-                        pins.clear();
+                        else
+                            deviceNames.append("dshow:///" + deviceName);
                     }
-
-                    if(deviceModes.length() > 1) {
-                        for(int i=0; i<deviceModes.length(); i++) {
-                            if(i == 0)
-                                deviceNames.append("dshow:///" + deviceName + "?!" + deviceModes.at(i));
-                            else
-                                deviceNames.append("dshow:///" + deviceName + "?" + deviceModes.at(i));
-                        }
-                    }
-                    else
-                        deviceNames.append("dshow:///" + deviceName);
+                    VariantClear(&var);
+                    pPropBag->Release();
+                } else {
+                    qDebug() << "could not bind to storage";
                 }
-                VariantClear(&var);
-                pPropBag->Release();
-            } else {
-                qDebug() << "could not bind to storage";
             }
+            pMoniker->Release();
         }
-        pMoniker->Release();
-    }
-    pEnum->Release();
-    pDevEnum->Release();
+        pEnum->Release();
+        pDevEnum->Release();
 
-    return deviceNames;
-}
+        return deviceNames;
+    }
+#else
+    QStringList CaptureProcessor::listDevices()
+    {
+        return QStringList();
+    }
+
 #endif //_WIN32
 
 
@@ -245,26 +250,15 @@ CaptureProcessor::CaptureProcessor() : QObject(NULL),
     gl = new QOpenGLWidget();
 
     //gl->setFormat(format);
-    qDebug() << "Setting window flags";
     gl->setWindowFlags(Qt::CustomizeWindowHint|Qt::FramelessWindowHint|Qt::Tool);
-    qDebug() << "Setting window size";
     gl->setGeometry(0,0,4,4);
-    qDebug() << "Showing window";
     gl->show();
-    qDebug() << "Processing show";
     QApplication::processEvents();
-    qDebug() << "Hiding window";
     gl->hide();
-    qDebug() << "Processing hide";
     QApplication::processEvents();
-
-    if(!gl)
-        qDebug() << "No gl";
 
     if(!gl->context())
         qDebug() << "No gl context";
-
-    //gl->context()->moveToThread(this);
 
     uploader = new TextureUploader(gl);
     downloader = new TextureDownloader(gl);

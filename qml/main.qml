@@ -66,7 +66,7 @@ Item {
     }
 
     Image {
-        source: "vidiot_bg.png"
+        source: "../resources/vidiot_bg.png"
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom

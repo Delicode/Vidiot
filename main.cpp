@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
         view = new QQuickView();
         view->setTitle("Vidiöt");
 
-        view->setIcon(QIcon(":/vidiot_icon.png"));
+        view->setIcon(QIcon(":/resources/vidiot_icon.png"));
 
         thread.processor.setMainView(view);
         view->rootContext()->setContextProperty("formatlist", formatList());
@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
 
         view->rootContext()->setContextProperty("dpi", qApp->primaryScreen()->logicalDotsPerInch()/96.f);
 
-        view->setSource(QUrl("qrc:/ui.qml"));
+        view->setSource(QUrl("qrc:/qml/main.qml"));
 
         QObject *object = view->rootObject();
 
@@ -185,8 +185,8 @@ int main(int argc, char *argv[])
 
         VideoView *videoview = object->findChild<VideoView*>();
 
-        QObject::connect(&fr, SIGNAL(sendFeed(unsigned int, int, int)), &FeedOutput::instance(), SLOT(send(uint,int,int)));
-        QObject::connect(&thread.processor, SIGNAL(sendFeed(uint,int,int,bool)), &FeedOutput::instance(), SLOT(send(uint,int,int,bool)));
+        QObject::connect(&fr, SIGNAL(sendFeed(unsigned int, int, int)), &FeedOutput::instance(), SLOT(sendTexture(uint,int,int)));
+        QObject::connect(&thread.processor, SIGNAL(sendFeed(uint,int,int,bool)), &FeedOutput::instance(), SLOT(sendTexture(uint,int,int,bool)));
 
         QObject::connect(videoview, SIGNAL(setResolution(QString)), &FeedOutput::instance(), SLOT(setResolution(QString)));
         QObject::connect(&fr, SIGNAL(sendFeed(unsigned int, int, int)), videoview, SLOT(draw(uint,int,int)));
