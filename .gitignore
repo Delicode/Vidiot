@@ -1,0 +1,5 @@
+vidiot.build_config
+*.exe
+*.obj
+*.o
+*.user
