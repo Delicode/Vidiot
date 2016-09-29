@@ -13,6 +13,15 @@ CURRENT_DIR=$(pwd)
 QT_DIR=/Users/Delicode1/Qt56/5.6/clang_64/lib
 QT_LIB_PATH=@rpath
 QT_FOLDER=framework/Versions/5
+FFMPEG_FOLDER=/usr/local/opt/ffmpeg/lib
+AVDEVICE_VERSION=57
+AVCODEC_VERSION=57
+AVFORMAT_VERSION=57
+SWSCALE_VERSION=4
+AVUTIL_VERSION=55
+SWRESAMPLE_VERSION=2
+QT_VERSION=5
+QTAV_VERSION=1
 
 if test -d $BUNDLE_PATH
 then
@@ -71,29 +80,49 @@ fi
 
 cd $CWD
 
+install_name_tool -id @executable_path/../Frameworks/QtAV.framework/Versions/$QTAV_VERSION/QtAV $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+install_name_tool -change @rpath/QtGui.framework/Versions/$QT_VERSION/QtGui @executable_path/../Frameworks/QtGui.framework/Versions/$QT_VERSION/QtGui $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+install_name_tool -change @rpath/QtCore.framework/Versions/$QT_VERSION/QtCore @executable_path/../Frameworks/QtCore.framework/Versions/$QT_VERSION/QtCore $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+install_name_tool -change $FFMPEG_FOLDER/libavcodec.$AVCODEC_VERSION.dylib @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+install_name_tool -change $FFMPEG_FOLDER/libavformat.$AVFORMAT_VERSION.dylib @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+install_name_tool -change $FFMPEG_FOLDER/libswscale.$SWSCALE_VERSION.dylib @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+install_name_tool -change $FFMPEG_FOLDER/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+
+install_name_tool -id @executable_path/../Frameworks/QtAVWidgets.framework/Versions/$QTAV_VERSION/QtAVWidgets $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+install_name_tool -change @rpath/QtAV.framework/Versions/$QTAV_VERSION/QtAV @executable_path/../Frameworks/QtAV.framework/Versions/$QTAV_VERSION/QtAV $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+install_name_tool -change @rpath/QtGui.$QT_FOLDER/QtGui @executable_path/../Frameworks/QtGui.$QT_FOLDER/QtGui $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+install_name_tool -change @rpath/QtCore.$QT_FOLDER/QtCore @executable_path/../Frameworks/QtCore.$QT_FOLDER/QtCore $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+install_name_tool -change @rpath/QtOpenGL.$QT_FOLDER/QtOpenGL @executable_path/../Frameworks/QtOpenGL.$QT_FOLDER/QtOpenGL $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+install_name_tool -change @rpath/QtWidgets.$QT_FOLDER/QtWidgets @executable_path/../Frameworks/QtWidgets.$QT_FOLDER/QtWidgets $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+
+install_name_tool -change $FFMPEG_FOLDER/libavcodec.$AVCODEC_VERSION.dylib @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.lib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+install_name_tool -change $FFMPEG_FOLDER/libavformat.$AVFORMAT_VERSION.dylib @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.lib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+install_name_tool -change $FFMPEG_FOLDER/libswscale.$SWSCALE_VERSION.dylib @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.lib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+install_name_tool -change $FFMPEG_FOLDER/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.lib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+
 echo "Copying ffmpeg libs"
-cp -v /usr/local/opt/ffmpeg/lib/libavdevice.57.dylib $BUNDLE_PATH/Contents/Frameworks/
-cp -v /usr/local/opt/ffmpeg/lib/libavcodec.57.dylib $BUNDLE_PATH/Contents/Frameworks/
-cp -v /usr/local/opt/ffmpeg/lib/libavformat.57.dylib $BUNDLE_PATH/Contents/Frameworks/
-cp -v /usr/local/opt/ffmpeg/lib/libswscale.4.dylib $BUNDLE_PATH/Contents/Frameworks/
-cp -v /usr/local/opt/ffmpeg/lib/libavutil.55.dylib $BUNDLE_PATH/Contents/Frameworks/
-cp -v /usr/local/opt/ffmpeg/lib/libswresample.2.dylib $BUNDLE_PATH/Contents/Frameworks/
+cp -v $FFMPEG_FOLDER/libavdevice.$AVDEVICE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/
+cp -v $FFMPEG_FOLDER/libavcodec.$AVCODEC_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/
+cp -v $FFMPEG_FOLDER/libavformat.$AVFORMAT_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/
+cp -v $FFMPEG_FOLDER/libswscale.$SWSCALE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/
+cp -v $FFMPEG_FOLDER/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/
+cp -v $FFMPEG_FOLDER/libswresample.$SWRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/
 
 echo "copying syphon"
 cp -rv ../lib/Syphon.framework $BUNDLE_PATH/Contents/Frameworks/
 
 echo "changing ffmpeg search paths"
 
-install_name_tool -change /usr/local/opt/ffmpeg/lib/libavdevice.57.dylib @executable_path/../Frameworks/libavdevice.57.dylib $BUNDLE_PATH/Contents/MacOS/Vidiot
-install_name_tool -change /usr/local/opt/ffmpeg/lib/libavcodec.57.dylib @executable_path/../Frameworks/libavcodec.57.dylib $BUNDLE_PATH/Contents/MacOS/Vidiot
-install_name_tool -change /usr/local/opt/ffmpeg/lib/libavformat.57.dylib @executable_path/../Frameworks/libavformat.57.dylib $BUNDLE_PATH/Contents/MacOS/Vidiot
-install_name_tool -change /usr/local/opt/ffmpeg/lib/libswscale.4.dylib @executable_path/../Frameworks/libswscale.4.dylib $BUNDLE_PATH/Contents/MacOS/Vidiot
-install_name_tool -change /usr/local/opt/ffmpeg/lib/libavutil.55.dylib @executable_path/../Frameworks/libavutil.55.dylib $BUNDLE_PATH/Contents/MacOS/Vidiot
-install_name_tool -change /usr/local/opt/ffmpeg/lib/libswresample.2.dylib @executable_path/../Frameworks/libswresample.2.dylib $BUNDLE_PATH/Contents/MacOS/Vidiot
+install_name_tool -change $FFMPEG_FOLDER/libavdevice.$AVDEVICE_VERSION.dylib @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib $BUNDLE_PATH/Contents/MacOS/Vidiot
+install_name_tool -change $FFMPEG_FOLDER/libavcodec.$AVCODEC_VERSION.dylib @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib $BUNDLE_PATH/Contents/MacOS/Vidiot
+install_name_tool -change $FFMPEG_FOLDER/libavformat.$AVFORMAT_VERSION.dylib @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib $BUNDLE_PATH/Contents/MacOS/Vidiot
+install_name_tool -change $FFMPEG_FOLDER/lib/libswscale.$SWSCALE_VERSION.dylib @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib $BUNDLE_PATH/Contents/MacOS/Vidiot
+install_name_tool -change $FFMPEG_FOLDER/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/MacOS/Vidiot
+install_name_tool -change $FFMPEG_FOLDER/libswresample.$SWRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/MacOS/Vidiot
 
 echo "changing QtAv search paths"
-install_name_tool -change @rpath/QtAV.framework/Versions/1/QtAV @executable_path/../Frameworks/QtAV.framework/Versions/1/QtAV $BUNDLE_PATH/Contents/MacOS/Vidiot
-install_name_tool -change @rpath/QtAVWidgets.framework/Versions/1/QtAVWidgets @executable_path/../Frameworks/QtAvWidgets.framework/Versions/1/QtAvWidgets $BUNDLE_PATH/Contents/MacOS/Vidiot
+install_name_tool -change @rpath/QtAV.framework/Versions/$QTAV_VERSION/QtAV @executable_path/../Frameworks/QtAV.framework/Versions/$QTAV_VERSION/QtAV $BUNDLE_PATH/Contents/MacOS/Vidiot
+install_name_tool -change @rpath/QtAVWidgets.framework/Versions/$QTAV_VERSION/QtAVWidgets @executable_path/../Frameworks/QtAvWidgets.framework/Versions/$QTAV_VERSION/QtAvWidgets $BUNDLE_PATH/Contents/MacOS/Vidiot
 
 echo "changing syphon search paths"
 install_name_tool -change @loader_path/../Frameworks/Syphon.framework/Versions/A/Syphon @executable_path/../Frameworks/Syphon.framework/Versions/A/Syphon $BUNDLE_PATH/Contents/MacOS/Vidiot
@@ -136,4 +165,6 @@ if [ "$BUILD_MODE" = "DEBUG" ]; then
     install_name_tool -change @executable_path/../Frameworks/QtDBus.$QT_FOLDER/QtDBus @executable_path/../Frameworks/QtDBus.$QT_FOLDER/QtDBus_debug $BUNDLE_PATH/Contents/PlugIns/platforms/libqcocoa.dylib
     install_name_tool -change @executable_path/../Frameworks/QtPrintSupport.$QT_FOLDER/QtPrintSupport @executable_path/../Frameworks/QtPrintSupport.$QT_FOLDER/QtPrintSupport_debug $BUNDLE_PATH/Contents/PlugIns/platforms/libqcocoa.dylib
     install_name_tool -change @executable_path/../Frameworks/QtWidgets.$QT_FOLDER/QtWidgets @executable_path/../Frameworks/QtWidgets.$QT_FOLDER/QtWidgets_debug $BUNDLE_PATH/Contents/PlugIns/platforms/libqcocoa.dylib
+
+    install_name_tool -change @executable_path/../Frameworks/QtAV.framework/Versions/$QTAV_VERSION/QtAV_debug @executable_path/../Frameworks/QtAV.framework/Versions/$QTAV_VERSION/QtAV $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/Versions/$QTAV_VERSION/QtAVWidgets
 fi
