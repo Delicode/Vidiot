@@ -17,6 +17,7 @@
 #include "StdInThread.h"
 
 #include <QtAV>
+#include <iostream>
 
 QQuickView *view = NULL;
 
@@ -114,14 +115,14 @@ int main(int argc, char *argv[])
                 img.scaled(w, h, Qt::KeepAspectRatio, Qt::SmoothTransformation).save(&buffer, "JPG");
                 buffer.close();
 
-                cout << "length:" << p.duration << ":thumbnail:" << ba.toBase64().data() << endl;
+                std::cout << "length:" << p.duration << ":thumbnail:" << ba.toBase64().data() << std::endl;
             }
             return 0;
         }
         else if(QString(argv[1]) == "list_devices") {
             QStringList devices = CaptureProcessor::listDevices();
             for(int i=0; i<devices.length(); i++)
-                cout << devices.at(i).toLocal8Bit().constData() << endl;
+                std::cout << devices.at(i).toLocal8Bit().constData() << std::endl;
 
             return 0;
         }

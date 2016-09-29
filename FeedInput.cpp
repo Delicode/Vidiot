@@ -2,6 +2,8 @@
 #include <QOpenGLFunctions>
 #include <QApplication>
 #include <QThread>
+#include <QDebug>
+#include <math.h>
 
 FeedInput::FeedInput(QString name, QOpenGLWidget *glwid) : QObject(NULL),
     feedreceiver_created(false),
@@ -44,7 +46,15 @@ FeedInput::FeedInput(QString name, QOpenGLWidget *glwid) : QObject(NULL),
 FeedInput::~FeedInput()
 {
     if(feedreceiver_created)
+    {
+#ifdef WIN32
         spoutreceiver.ReleaseReceiver();
+#endif
+
+#ifdef __APPLE__
+        // TODO: Add syphon
+#endif
+    }
 }
 
 void FeedInput::ensureFeed()
@@ -85,6 +95,7 @@ bool FeedInput::receiveFeed()
     return spoutreceiver.ReceiveTexture(name, input_width, input_height, input_fbo->texture(), GL_TEXTURE_2D, true);
 #else
     /* TODO: syphon */
+    return false;
 #endif
 }
 

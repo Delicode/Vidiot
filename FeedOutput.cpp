@@ -72,7 +72,9 @@ QStringList FeedOutput::listSources(bool list_self)
 {
     QStringList list;
 
+#ifdef WIN32
     SpoutReceiver receiver;
+
     int count = receiver.GetSenderCount();
 
     char name[256];
@@ -86,6 +88,10 @@ QStringList FeedOutput::listSources(bool list_self)
             list << QString("feed:///") + name + "?60 fps";
         }
     }
+#endif
 
+#ifdef __APPLE__
+    // TODO: Add syphon
+#endif
     return list;
 }

@@ -374,14 +374,14 @@ void VideoRecorder::flush()
 
     qDebug() << "Flushing frames";
 
-    while(writeFrame(RecorderFrame())) {}
+    while (writeFrame(RecorderFrame())) {}
 
     qDebug() << "Flushing finished";
 
     end();
 }
 
-bool VideoRecorder::writeFrame(RecorderFrame &frame)
+bool VideoRecorder::writeFrame(const RecorderFrame &frame)
 {
     initialize(frame.width, frame.height);
 

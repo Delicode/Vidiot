@@ -3,10 +3,12 @@
 #include <QDebug>
 #include <iostream>
 
+#ifdef WIN32
 #include <windows.h>
 #include <Dshow.h>
 #include <strmif.h>
 #include <dvdmedia.h>
+#endif
 
 #include <QtConcurrentRun>
 
@@ -16,6 +18,7 @@ extern "C"
     #include <libavutil/log.h>
 }
 
+#ifdef WIN32
 struct dshow_ctxx {
     const AVClass *classs;
 
@@ -133,6 +136,8 @@ void showDshowProperties(IBaseFilter *device_filter, QString device_name) {
     if (ca_guid.pElems)
         CoTaskMemFree(ca_guid.pElems);
 }
+
+#endif
 
 VideoPlayer::VideoPlayer(QString filename) : QObject(NULL),
     pFormatCtx(NULL),
@@ -338,9 +343,11 @@ VideoPlayer::~VideoPlayer()
 void VideoPlayer::showProperties()
 {
     if(playfile.startsWith("dshow:///")) {
+#ifdef WIN32
         /* the dshow_ctxx struct is just copied from somewhere inside ffmpeg (dshow_ctx in the source).. if the struct changes radically things could get ugly */
         dshow_ctxx *ctx = (dshow_ctxx*)pFormatCtx->priv_data;
         QtConcurrent::run(&showDshowProperties, ctx->device_filter[0], device_name);
+#endif
     }
 }
 

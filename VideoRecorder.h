@@ -64,7 +64,7 @@ public:
     void end();
 
     static QStringList list_codecs(bool log = false);
-    bool writeFrame(RecorderFrame &frame);
+    bool writeFrame(const RecorderFrame &frame);
 
     static AVCodecID codec_h264_qsv;
     static AVCodecID codec_prores;
