@@ -59,6 +59,8 @@ FboRenderer::FboRenderer() :
     QApplication::processEvents();
 
     resolution = "100%";
+    gl_func = new QOpenGLFunctions_3_2_Core();
+    gl_func->initializeOpenGLFunctions();
 }
 
 VideoRendererId FboRenderer::id() const

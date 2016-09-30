@@ -3,6 +3,7 @@
 
 #include <QtAV>
 #include <QOpenGLWidget>
+#include <QOpenGLFunctions_3_2_Core>
 
 namespace QtAV {
 
@@ -15,11 +16,16 @@ class FboRenderer : public QObject, public VideoRenderer
     DPTR_DECLARE_PRIVATE(FboRenderer)
 public:
     explicit FboRenderer();
+    ~FboRenderer() {
+        if (gl_func)
+            delete gl_func;
+    }
 
     VideoRendererId id() const Q_DECL_OVERRIDE;
     bool isSupported(VideoFormat::PixelFormat pixfmt) const Q_DECL_OVERRIDE;
 
     QOpenGLWidget *gl;
+    QOpenGLFunctions_3_2_Core* gl_func;
 
 public slots:
     void setResolution(QString resolution_str) {resolution = resolution_str;}

@@ -7,6 +7,7 @@
 
 #include <QOpenGLShaderProgram>
 #include <QOpenGLBuffer>
+#include <QOpenGLFunctions_3_2_Core>
 
 class FboDrawer {
     bool init_glbuffers;
@@ -14,13 +15,19 @@ class FboDrawer {
     QOpenGLShaderProgram *screen_prog;
     QOpenGLBuffer verts;
     QOpenGLBuffer tcoords;
+    QOpenGLFunctions_3_2_Core* glfunc;
+    GLuint vaoQuad;
+
 public:
     FboDrawer() {
         init_glbuffers = true;
         screen_prog = NULL;
+        glfunc = new QOpenGLFunctions_3_2_Core;
+        glfunc->initializeOpenGLFunctions();
     }
     ~FboDrawer() {
         if(screen_prog) delete screen_prog;
+        if (glfunc) delete glfunc;
     }
 
 

@@ -241,12 +241,6 @@ CaptureProcessor::CaptureProcessor() : QObject(NULL),
 {
     setObjectName("Capture processor");
 
-    //    QSurfaceFormat format;
-    //    format.setMajorVersion(3);
-    //    format.setMinorVersion(2);
-    //    format.setProfile(QSurfaceFormat::CoreProfile);
-    //    QSurfaceFormat::setDefaultFormat(format);
-
     gl = new QOpenGLWidget();
 
     //gl->setFormat(format);

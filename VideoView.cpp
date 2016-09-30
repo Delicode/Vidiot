@@ -6,7 +6,7 @@
 #include "VideoPlayer.h"
 #include <QOpenGLShaderProgram>
 
-#define GLER {GLenum er = glGetError(); if(er != GL_NO_ERROR) qDebug() << "GLerror" << __LINE__ << er;}
+#define GLER {GLenum er = glGetError(); if(er != GL_NO_ERROR) qDebug() << "GLerror" << __FILE__ << ", " << __LINE__ << er;}
 
 
 char glsl_color[] = {
@@ -90,6 +90,27 @@ bool FboDrawer::ensureBuffers()
             tcoords.allocate(quad_tcoords, 2*4*sizeof(float));
             tcoords.release();
         }
+
+
+        glfunc->glGenVertexArrays(1, &vaoQuad);
+        GLER
+        glfunc->glBindVertexArray(vaoQuad);
+        GLER
+        verts.bind();
+        GLER
+            glfunc->glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        GLER
+            glfunc->glEnableVertexAttribArray(0);
+        GLER
+        tcoords.bind();
+        GLER
+            glfunc->glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        GLER
+            glfunc->glEnableVertexAttribArray(1);
+        GLER
+        glfunc->glBindVertexArray(0);
+        GLER
+
     }
 
     return true;
@@ -100,7 +121,9 @@ void FboDrawer::drawFBO(QOpenGLFramebufferObject *fbo, QSize screen)
     static bool gl_error_reported = false;
 
     if(!screen_prog)
+    {
         screen_prog = new QOpenGLShaderProgram();
+    }
 
     GLenum glerr = glGetError();
     if(glerr != GL_NO_ERROR) {
@@ -142,33 +165,8 @@ void FboDrawer::drawFBO(QOpenGLFramebufferObject *fbo, QSize screen)
         return;
 
     GLER
-
-    if(!verts.bind())
-            qDebug() << "couldn't bind!";
-
+    glfunc->glBindVertexArray(vaoQuad);
     GLER
-
-    screen_prog->setAttributeBuffer(0, GL_FLOAT, 0, 2);
-
-    GLER
-    screen_prog->enableAttributeArray(0);
-
-    GLER
-
-    verts.release();
-
-    GLER
-
-    if(!tcoords.bind())
-        return;
-
-    GLER
-
-    screen_prog->setAttributeBuffer(1, GL_FLOAT, 0, 2);
-    screen_prog->enableAttributeArray(1);
-
-    tcoords.release();
-
     QOpenGLContext::currentContext()->functions()->glBindTexture(GL_TEXTURE_2D, fbo->texture());
 
     float fbo_aspect = (float)fbo->width()/(float)fbo->height();
@@ -189,6 +187,8 @@ void FboDrawer::drawFBO(QOpenGLFramebufferObject *fbo, QSize screen)
 
         screen_prog->release();
     }
+    GLER
+    glfunc->glBindVertexArray(0);
 
     GLER
 }
@@ -241,31 +241,8 @@ void FboDrawer::drawTexture(unsigned int texid, int width, int height, bool flip
 
     GLER
 
-    if(!verts.bind())
-            qDebug() << "couldn't bind!";
-
+    glfunc->glBindVertexArray(vaoQuad);
     GLER
-
-    screen_prog->setAttributeBuffer(0, GL_FLOAT, 0, 2);
-
-    GLER
-    screen_prog->enableAttributeArray(0);
-
-    GLER
-
-    verts.release();
-
-    GLER
-
-    if(!tcoords.bind())
-        return;
-
-    GLER
-
-    screen_prog->setAttributeBuffer(1, GL_FLOAT, 0, 2);
-    screen_prog->enableAttributeArray(1);
-
-    tcoords.release();
 
     QOpenGLContext::currentContext()->functions()->glBindTexture(GL_TEXTURE_2D, texid);
 
@@ -282,14 +259,20 @@ void FboDrawer::drawTexture(unsigned int texid, int width, int height, bool flip
     if(flip == false)
         scaley *= -1.f;
 
+    scalex = 1.f;
+    scaley = 1.f;
+
     if(screen_prog->bind()) {
         screen_prog->setUniformValue("tex", 0);
         screen_prog->setUniformValue("scale", QVector2D(scalex, scaley));
-
         QOpenGLContext::currentContext()->functions()->glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
         screen_prog->release();
     }
+
+    GLER
+
+    glfunc->glBindVertexArray(0);
 
     GLER
 }
@@ -321,7 +304,6 @@ public:
         width = vv->texwidth;
         height = vv->texheight;
         flip = vv->texflip;
-
     }
 
     QOpenGLFramebufferObject *createFramebufferObject(const QSize &size) {

@@ -68,7 +68,10 @@ QVector<QtAV::VideoDecoderId> decoderIds()
     for(int i=0; i<10; i++) {
         QString name = settings.value(QString::number(i)).toString();
         if(valid_names.contains(name))
+        {
             ids << QtAV::VideoDecoder::id(name.toLatin1().constData());
+            qDebug() << "added decoder id: " << name;
+        }
     }
 
     return ids;
@@ -77,6 +80,17 @@ QVector<QtAV::VideoDecoderId> decoderIds()
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+#ifdef __APPLE__
+    // On OS X, apparently needs to be done before QApplication exists
+    // For some reason this can cause shared OpenGL context to not work otherwise
+    // Does not happen with the QMLPlayer example though...
+    QSurfaceFormat format;
+    format.setMajorVersion(3);
+    format.setMinorVersion(2);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    QSurfaceFormat::setDefaultFormat(format);
+#endif
+
     QApplication a(argc, argv);
 
     QCoreApplication::setOrganizationName("Delicode");
@@ -160,7 +174,6 @@ int main(int argc, char *argv[])
 
     QObject::connect(&thread.processor, SIGNAL(newRecorderFrame(RecorderFrame)), &rthread.controller, SLOT(recorderFrame(RecorderFrame)));
     QObject::connect(&thread.processor, SIGNAL(stopRecording()), &rthread.controller, SLOT(stop()));
-
 
     if(input.isEmpty()) {
         view = new QQuickView();
