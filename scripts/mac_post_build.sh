@@ -25,7 +25,15 @@ AVRESAMPLE_VERSION=3
 AVFILTER_VERSION=6
 QT_VERSION=5
 QTAV_VERSION=1
-QTAV_QML_DIR=/Users/Delicode1/QtAV_build/bin/
+if [ "$BUILD_MODE" == "DEBUG" ]; then
+    # You must rename a couple of *_debug.dylib libs into *.dylib
+    # in the QtAV build dir as well as the QML build dir
+    # The build dir is usually QtAV_build/lib_osx_x86_64_llvm
+    # and QML dir QtAV_build/bin
+    QTAV_QML_DIR=/Users/Delicode1/QtAV_build_debug/bin/
+else
+    QTAV_QML_DIR=/Users/Delicode1/QtAV_build/bin/
+fi
 
 if test -d $BUNDLE_PATH
 then
@@ -59,6 +67,9 @@ cp replace_plugin_rpaths.sh $BUNDLE_PATH/Contents/PlugIns/printsupport
 cp replace_plugin_debug_paths.sh $BUNDLE_PATH/Contents/PlugIns/printsupport
 cp replace_plugin_rpaths.sh $BUNDLE_PATH/Contents/PlugIns/bearer
 cp replace_plugin_debug_paths.sh $BUNDLE_PATH/Contents/PlugIns/bearer
+
+chmod -R 755 $BUNDLE_PATH/Contents/PlugIns
+chmod -R 755 $BUNDLE_PATH/Contents/Frameworks
 
 cd $BUNDLE_PATH/Contents/Frameworks
 
@@ -155,6 +166,7 @@ cp -vr $QT_QML_DIR/QtQuick.2 $BUNDLE_PATH/Contents/Resources/qml
 cp -vr $QTAV_QML_DIR/QtAV $BUNDLE_PATH/Contents/Resources/qml
 
 cp replace_qml_rpaths.sh $BUNDLE_PATH/Contents/Resources/qml
+chmod -R 755 $BUNDLE_PATH/Contents/Resources/qml
 cd $BUNDLE_PATH/Contents/Resources/qml
 
 sh replace_qml_rpaths.sh
@@ -185,6 +197,8 @@ cp -v /usr/local/opt/lame/lib/libmp3lame.0.dylib $BUNDLE_PATH/Contents/Framework
 
 echo "copying syphon"
 cp -rv ../lib/Syphon.framework $BUNDLE_PATH/Contents/Frameworks/
+
+chmod -R 755 $BUNDLE_PATH/Contents/Frameworks
 
 echo "changing ffmpeg search paths"
 
@@ -241,8 +255,20 @@ install_name_tool -change $FFMPEG_FOLDER/libavresample.$AVRESAMPLE_VERSION.dylib
 install_name_tool -change $FFMPEG_FOLDER/libavdevice.$AVDEVICE_VERSION.dylib @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib $BUNDLE_PATH/Contents/Resources/qml/QtAV/libQmlAV.dylib
 install_name_tool -change $FFMPEG_FOLDER/libavfilter.$AVFILTER_VERSION.dylib @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib $BUNDLE_PATH/Contents/Resources/qml/QtAV/libQmlAV.dylib
 
+install_name_tool -change $FFMPEG_FOLDER/libavcodec.$AVCODEC_VERSION.dylib @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
+install_name_tool -change $FFMPEG_FOLDER/libavformat.$AVFORMAT_VERSION.dylib @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
+install_name_tool -change $FFMPEG_FOLDER/libswscale.$SWSCALE_VERSION.dylib @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
+install_name_tool -change $FFMPEG_FOLDER/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
+install_name_tool -change $FFMPEG_FOLDER/libswresample.$SWRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
+install_name_tool -change $FFMPEG_FOLDER/libavresample.$AVRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
+install_name_tool -change $FFMPEG_FOLDER/libavdevice.$AVDEVICE_VERSION.dylib @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
+install_name_tool -change $FFMPEG_FOLDER/libavfilter.$AVFILTER_VERSION.dylib @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
+
 cd $CWD
 cp replace_ffmpeg_paths.sh $BUNDLE_PATH/Contents/Frameworks/
 cd $BUNDLE_PATH/Contents/Frameworks
 sh replace_ffmpeg_paths.sh
+
+cd $CWD
+cp ../quality.ini $BUNDLE_PATH/Contents/Frameworks
 
