@@ -243,7 +243,6 @@ CaptureProcessor::CaptureProcessor() : QObject(NULL),
 
     gl = new QOpenGLWidget();
 
-    //gl->setFormat(format);
     gl->setWindowFlags(Qt::CustomizeWindowHint|Qt::FramelessWindowHint|Qt::Tool);
     gl->setGeometry(0,0,4,4);
     gl->show();
