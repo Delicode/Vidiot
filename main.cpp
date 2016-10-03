@@ -199,8 +199,15 @@ int main(int argc, char *argv[])
 
         VideoView *videoview = object->findChild<VideoView*>();
 
+#ifdef WIN32
         QObject::connect(&fr, SIGNAL(sendFeed(unsigned int, int, int)), &FeedOutput::instance(), SLOT(sendTexture(uint,int,int)));
         QObject::connect(&thread.processor, SIGNAL(sendFeed(uint,int,int,bool)), &FeedOutput::instance(), SLOT(sendTexture(uint,int,int,bool)));
+#endif
+#ifdef __APPLE__
+        QObject::connect(&fr, SIGNAL(sendFeedFbo(unsigned int, int, int)), &FeedOutput::instance(), SLOT(sendFBO(uint,int,int)));
+        QObject::connect(&thread.processor, SIGNAL(sendFeedFbo(uint,int,int,bool)), &FeedOutput::instance(), SLOT(sendFBO(uint,int,int,bool)));
+#endif
+
 
         QObject::connect(videoview, SIGNAL(setResolution(QString)), &FeedOutput::instance(), SLOT(setResolution(QString)));
         QObject::connect(&fr, SIGNAL(sendFeed(unsigned int, int, int)), videoview, SLOT(draw(uint,int,int)));

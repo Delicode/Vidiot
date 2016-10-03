@@ -88,6 +88,7 @@ signals:
     void playVideo(QString filename);
 
     void sendFeed(unsigned int, int, int, bool);
+    void sendFeedFbo(unsigned int, int, int, bool);
     void sendResolution(int,int);
     void error(QString error_str);
 

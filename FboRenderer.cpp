@@ -169,6 +169,7 @@ void FboRenderer::drawFrame()
         glFinish();
 
         emit sendFeed(d.fbo[d.fbo_index]->texture(), d.fbo[d.fbo_index]->width(), d.fbo[d.fbo_index]->height());
+        emit sendFeedFbo(d.fbo[d.fbo_index]->handle(), d.fbo[d.fbo_index]->width(), d.fbo[d.fbo_index]->height());
         emit sendResolution(original_w, original_h);
 
         float dt = (float)t.nsecsElapsed()/1000000.f;

@@ -504,6 +504,7 @@ void CaptureProcessor::process()
 
         if(uploader->preroll == 0) {
             emit sendFeed(uploader->fbo()->texture(), uploader->fbo()->width(), uploader->fbo()->height(), false);
+            emit sendFeedFbo(uploader->fbo()->handle(), uploader->fbo()->width(), uploader->fbo()->height(), false);
             emit sendResolution(player->width, player->height);
         }
 
@@ -519,23 +520,26 @@ void CaptureProcessor::process()
     else if(feed_input) {
         capture_start = t.nsecsElapsed();
         feed_input->capture(resolution);
+        if (feed_input->fbo())
+        {
+            emit sendFeed(feed_input->fbo()->texture(), feed_input->fbo()->width(), feed_input->fbo()->height(), true);
+            emit sendFeedFbo(feed_input->fbo()->handle(), feed_input->fbo()->width(), feed_input->fbo()->height(), true);
+            emit sendResolution(feed_input->input_width, feed_input->input_height);
 
-        emit sendFeed(feed_input->fbo()->texture(), feed_input->fbo()->width(), feed_input->fbo()->height(), true);
-        emit sendResolution(feed_input->input_width, feed_input->input_height);
+            if(recording) {
+                download_start = t.nsecsElapsed();
+                downloader->download(feed_input->fbo());
 
-        if(recording) {
-            download_start = t.nsecsElapsed();
-            downloader->download(feed_input->fbo());
+                record_start = t.nsecsElapsed();
+                //skip first frame as the download buffer is not yet cycled
+                if(downloader->preroll == 0) {
+                    if(!record_time.isValid())
+                        record_time.start();
 
-            record_start = t.nsecsElapsed();
-            //skip first frame as the download buffer is not yet cycled
-            if(downloader->preroll == 0) {
-                if(!record_time.isValid())
-                    record_time.start();
-
-                RecorderFrame frame(downloader->buf_width, downloader->buf_height, new unsigned char[downloader->buf_width*downloader->buf_height*3], record_time.elapsed());
-                memcpy(frame.data, downloader->data, frame.width*frame.height*3*sizeof(unsigned char));
-                emit newRecorderFrame(frame);
+                    RecorderFrame frame(downloader->buf_width, downloader->buf_height, new unsigned char[downloader->buf_width*downloader->buf_height*3], record_time.elapsed());
+                    memcpy(frame.data, downloader->data, frame.width*frame.height*3*sizeof(unsigned char));
+                    emit newRecorderFrame(frame);
+                }
             }
         }
 

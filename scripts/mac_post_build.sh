@@ -213,7 +213,7 @@ install_name_tool -change $FFMPEG_FOLDER/libavcodec.$AVCODEC_VERSION.dylib @exec
 install_name_tool -change $FFMPEG_FOLDER/libavformat.$AVFORMAT_VERSION.dylib @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
 install_name_tool -change $FFMPEG_FOLDER/libswscale.$SWSCALE_VERSION.dylib @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
 install_name_tool -change $FFMPEG_FOLDER/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
-install_name_tool -change $FFMPEG_FOLDER/libswresample.$SWRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libswresample.$SWERSAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+install_name_tool -change $FFMPEG_FOLDER/libswresample.$SWRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
 install_name_tool -change $FFMPEG_FOLDER/libavresample.$AVRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
 install_name_tool -change $FFMPEG_FOLDER/libavdevice.$AVDEVICE_VERSION.dylib @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
 install_name_tool -change $FFMPEG_FOLDER/libavfilter.$AVFILTER_VERSION.dylib @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
@@ -232,7 +232,7 @@ install_name_tool -change $FFMPEG_FOLDER/libavcodec.$AVCODEC_VERSION.dylib @exec
 install_name_tool -change $FFMPEG_FOLDER/libavformat.$AVFORMAT_VERSION.dylib @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
 install_name_tool -change $FFMPEG_FOLDER/libswscale.$SWSCALE_VERSION.dylib @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
 install_name_tool -change $FFMPEG_FOLDER/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
-install_name_tool -change $FFMPEG_FOLDER/libswresample.$SWRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libswresample.$SWERSAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+install_name_tool -change $FFMPEG_FOLDER/libswresample.$SWRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
 install_name_tool -change $FFMPEG_FOLDER/libavresample.$AVRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
 install_name_tool -change $FFMPEG_FOLDER/libavdevice.$AVDEVICE_VERSION.dylib @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
 install_name_tool -change $FFMPEG_FOLDER/libavfilter.$AVFILTER_VERSION.dylib @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
@@ -270,5 +270,5 @@ cd $BUNDLE_PATH/Contents/Frameworks
 sh replace_ffmpeg_paths.sh
 
 cd $CWD
-cp ../quality.ini $BUNDLE_PATH/Contents/Frameworks
+cp ../quality.ini $BUNDLE_PATH/Contents/MacOS
 

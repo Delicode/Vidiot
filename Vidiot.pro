@@ -32,7 +32,8 @@ HEADERS  += VideoView.h \
 		FeedInput.h \
 		FboRenderer.h \
 		FeedOutput.h \
-		StdInThread.h
+		StdInThread.h \
+    predefines.h
 
 INCLUDEPATH += lib/ffmpeg/include
 
@@ -126,6 +127,8 @@ CONFIG(debug, debug|release) {
 
 
 macx {
+    OBJECTIVE_SOURCES += DelicodeSyphonServer.mm
+    HEADERS += DelicodeSyphonServer.h
 	QMAKE_INFO_PLIST = resources/MyInfo.plist
     LIBS += -framework IOKit -framework CoreFoundation -framework CoreServices -framework ApplicationServices -framework AppKit
 

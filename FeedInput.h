@@ -6,6 +6,7 @@
 #include <QMutex>
 #include <QOpenGLBuffer>
 #include <QElapsedTimer>
+#include "DelicodeSyphonServer.h"
 
 #ifdef _WIN32
     #include "External/Spout/Spout.h"
@@ -56,6 +57,10 @@ private:
 
     #ifdef _WIN32
     SpoutReceiver spoutreceiver;
+    #endif
+
+    #ifdef __APPLE__
+    DelicodeSyphonClient syphonreceiver;
     #endif
 
     QElapsedTimer t;
