@@ -19,7 +19,7 @@ class CaptureProcessor : public QObject
     Q_OBJECT
 public:
     CaptureProcessor();
-    ~CaptureProcessor();
+    virtual ~CaptureProcessor();
 
     void setVideoView(VideoView *vv);
     void setMainView(QQuickView *mv);
@@ -95,6 +95,7 @@ signals:
     void quit();
     void stopRecording();
     void newRecorderFrame(RecorderFrame fr);
+    void sourcesListUpdate(QStringList);
 
 private:
     QString resolution;

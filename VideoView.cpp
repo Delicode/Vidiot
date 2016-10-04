@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QOpenGLFramebufferObjectFormat>
 #include "VideoPlayer.h"
+#include <QQmlContext>
 #include <QOpenGLShaderProgram>
 
 #include "predefines.h"
@@ -322,4 +323,15 @@ private:
 QQuickFramebufferObject::Renderer *VideoView::createRenderer() const
 {
     return new TextureInFboRenderer();
+}
+
+void VideoView::setMainView(QQuickView *v)
+{
+    main_view = v;
+}
+
+void VideoView::receiveSourcesList(QStringList sourcesList)
+{
+    if (main_view)
+        main_view->rootContext()->setContextProperty("sourcelist", sourcesList);
 }

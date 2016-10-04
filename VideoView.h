@@ -60,8 +60,11 @@ public:
         t.start();
         connect(&t, SIGNAL(timeout()), this, SLOT(update()));
         setObjectName("vidiot_videoview");
+        main_view = NULL;
     }
     Renderer *createRenderer() const;
+
+    void setMainView(QQuickView* v);
 
     Q_INVOKABLE float pos() {return _pos;}
     Q_INVOKABLE float fps() {return _fps;}
@@ -98,6 +101,8 @@ public Q_SLOTS:
         texflip = flip;
     }
 
+    void receiveSourcesList(QStringList sourcesList);
+
 signals:
     void posChanged(float);
     void fpsChanged(float);
@@ -130,6 +135,7 @@ private:
     float _duration;
     float _sleeptime;
     float _recordtime;
+    QQuickView* main_view;
 };
 
 #endif // VIDEO_VIEW_H
