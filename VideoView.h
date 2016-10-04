@@ -59,6 +59,7 @@ public:
         t.setInterval(33);
         t.start();
         connect(&t, SIGNAL(timeout()), this, SLOT(update()));
+        setObjectName("vidiot_videoview");
     }
     Renderer *createRenderer() const;
 

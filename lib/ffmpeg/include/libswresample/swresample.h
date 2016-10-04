@@ -28,10 +28,11 @@
  */
 
 /**
- * @defgroup lswr libswresample
+ * @defgroup lswr Libswresample
  * @{
  *
- * Audio resampling, sample format conversion and mixing library.
+ * Libswresample (lswr) is a library that handles audio resampling, sample
+ * format conversion and mixing.
  *
  * Interaction with lswr is done through SwrContext, which is
  * allocated with swr_alloc() or swr_alloc_set_opts(). It is opaque, so all parameters

@@ -21,7 +21,8 @@ SOURCES += main.cpp\
 		FeedInput.cpp \
 		FboRenderer.cpp \
 		FeedOutput.cpp \
-		StdInThread.cpp
+		StdInThread.cpp \
+    VidiotApplication.cpp
 
 HEADERS  += VideoView.h \
 		TextureUploader.h \
@@ -33,12 +34,16 @@ HEADERS  += VideoView.h \
 		FboRenderer.h \
 		FeedOutput.h \
 		StdInThread.h \
-    predefines.h
+    predefines.h \
+    VidiotApplication.h
 
 INCLUDEPATH += lib/ffmpeg/include
 
 macx {
     LIBS += -L/usr/local/lib
+}
+win32 {
+    LIBS += -L$$_PRO_FILE_PWD_/lib/ffmpeg/lib/win64
 }
 LIBS += -lavdevice -lavcodec -lavformat -lswscale -lavutil -lswresample
 
@@ -46,10 +51,10 @@ INCLUDEPATH += "../Vidiot/lib/QtAV/include/QtAV" "../Vidiot/lib/QtAV/include"
 
 win32 {
     CONFIG(release, debug|release) {
-        LIBS += -lQtAV1
+        LIBS += -L$$_PRO_FILE_PWD_/lib/QtAV/lib/win64 -lQtAV1
     }
     else {
-        LIBS += -lQtAVd1
+        LIBS += -L$$_PRO_FILE_PWD_/lib/QtAV/lib/win64 -lQtAVd1
     }
 }
 

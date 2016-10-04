@@ -14,8 +14,6 @@
 #include "VideoRecorder.h"
 #include "VideoView.h"
 
-
-
 class CaptureProcessor : public QObject
 {
     Q_OBJECT

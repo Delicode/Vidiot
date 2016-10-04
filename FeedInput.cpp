@@ -39,6 +39,7 @@ FeedInput::FeedInput(QString name, QOpenGLWidget *glwid) : QObject(NULL),
     else {
         feed_name = name;
     }
+    setObjectName("FeedInput");
 }
 
 

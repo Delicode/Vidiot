@@ -9,12 +9,10 @@
 #include <QScreen>
 
 #include "VideoThread.h"
-
 #include "FboRenderer.h"
-
 #include "FeedOutput.h"
-
 #include "StdInThread.h"
+#include "VidiotApplication.h"
 
 #include <QtAV>
 #include <iostream>
@@ -91,7 +89,7 @@ int main(int argc, char *argv[])
     QSurfaceFormat::setDefaultFormat(format);
 #endif
 
-    QApplication a(argc, argv);
+    VidiotApplication a(argc, argv);
 
     QCoreApplication::setOrganizationName("Delicode");
     QCoreApplication::setOrganizationDomain("delicode.com");
@@ -162,6 +160,7 @@ int main(int argc, char *argv[])
     QtAV::AVPlayer *player = NULL;
 
     QtAV::FboRenderer fr;
+    fr.setObjectName("qtav_fborenderer");
 
     if(output.startsWith("feed:///"))
         FeedOutput::instance().setName(output);
@@ -192,10 +191,12 @@ int main(int argc, char *argv[])
         view->rootContext()->setContextProperty("dpi", qApp->primaryScreen()->logicalDotsPerInch()/96.f);
 
         view->setSource(QUrl("qrc:/qml/main.qml"));
+        view->setObjectName("vidiot_qml");
 
         QObject *object = view->rootObject();
 
         player = object->findChild<QtAV::AVPlayer*>();
+        player->setObjectName("qtav_player");
 
         VideoView *videoview = object->findChild<VideoView*>();
 
