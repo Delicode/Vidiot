@@ -102,6 +102,7 @@ public Q_SLOTS:
     }
 
     void receiveSourcesList(QStringList sourcesList);
+    void receiveResolutionList(QStringList list);
 
 signals:
     void posChanged(float);

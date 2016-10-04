@@ -337,8 +337,8 @@ void CaptureProcessor::updateResolutionList(int w, int h)
         list.append("Custom");
     }
 
-    if(main_view && list != current_resolutionlist)
-        main_view->rootContext()->setContextProperty("resolutionlist", list);
+    if (list != current_resolutionlist)
+        emit resolutionsChanged(list);
 
     current_resolutionlist = list;
 }
@@ -617,8 +617,13 @@ void CaptureProcessor::setMainView(QQuickView *mv)
     main_view = mv;
     updateSourceList();
     updateResolutionList();
+
+    // These two things are okay to change before this class moves to its own thread
+    // Tweaking the QML data after that is a recipe for undefined behavior
     if (main_view)
         main_view->rootContext()->setContextProperty("sourcelist", current_sourcelist);
+    if (main_view)
+        main_view->rootContext()->setContextProperty("resolutionlist", current_resolutionlist);
 }
 
 

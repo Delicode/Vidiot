@@ -335,3 +335,9 @@ void VideoView::receiveSourcesList(QStringList sourcesList)
     if (main_view)
         main_view->rootContext()->setContextProperty("sourcelist", sourcesList);
 }
+
+void VideoView::receiveResolutionList(QStringList list)
+{
+    if(main_view)
+        main_view->rootContext()->setContextProperty("resolutionlist", list);
+}

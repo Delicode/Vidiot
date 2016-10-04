@@ -200,6 +200,7 @@ int main(int argc, char *argv[])
 
         VideoView *videoview = object->findChild<VideoView*>();
         QObject::connect(&thread.processor, SIGNAL(sourcesListUpdate(QStringList)), videoview, SLOT(receiveSourcesList(QStringList)));
+        QObject::connect(&thread.processor, SIGNAL(resolutionsChanged(QStringList)), videoview, SLOT(receiveResolutionList(QStringList)));
         videoview->setMainView(view);
 
 #ifdef WIN32

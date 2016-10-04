@@ -13,5 +13,6 @@ VidiotApplication::VidiotApplication(int& argc, char** argv) : QApplication(argc
     filterEvents["QQuickAnimatorControllerGuiThreadEntity"].push_back("MetaCall");
 
     // Use this to break on specific events or something like that
-    interestingEvents["QObject"].push_back("ThreadChange");
+    //interestingEvents["QObject"].push_back("ThreadChange");
+    interestingEvents["QObject"].push_back("MetaCall");
 }
