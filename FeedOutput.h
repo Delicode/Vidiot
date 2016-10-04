@@ -59,14 +59,19 @@ private:
         QApplication::processEvents();
         gl->hide();
         QApplication::processEvents();
+#ifdef __APPLE__
         syphonserver = NULL;
+#endif
+        setObjectName("FeedOutput");
     }
 
     ~FeedOutput() {
         if(gl)
             delete gl;
+#ifdef __APPLE__
         if (syphonserver)
             delete syphonserver;
+#endif
     }
 
     /* don't allow copying */

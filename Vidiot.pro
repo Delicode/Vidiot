@@ -21,7 +21,8 @@ SOURCES += main.cpp\
 		FeedInput.cpp \
 		FboRenderer.cpp \
 		FeedOutput.cpp \
-		StdInThread.cpp
+		StdInThread.cpp \
+    VidiotApplication.cpp
 
 HEADERS  += VideoView.h \
 		TextureUploader.h \
@@ -33,7 +34,8 @@ HEADERS  += VideoView.h \
 		FboRenderer.h \
 		FeedOutput.h \
 		StdInThread.h \
-    predefines.h
+    predefines.h \
+    VidiotApplication.h
 
 INCLUDEPATH += lib/ffmpeg/include
 

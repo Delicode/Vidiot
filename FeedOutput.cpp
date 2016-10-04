@@ -85,6 +85,7 @@ void FeedOutput::sendTexture(unsigned int texid, int width, int height, bool fli
 #ifdef _WIN32
     spoutserv.SendTexture(texid, GL_TEXTURE_2D, width, height, flip);
 #else
+    // Does not work on OS X, probably due to texture rectangles being used
     //syphonserver->publishTexture(texid, width, height, flip);
 #endif
 
@@ -104,7 +105,7 @@ void FeedOutput::sendFBO(unsigned int fboid, int width, int height, bool flip)
 
     gl->makeCurrent();
 #ifdef _WIN32
-    spoutserv.SendFBO(fboid, GL_TEXTURE_2D, width, height, flip);
+    // spout has no fbo output?
 #else
     syphonserver->publishFBO(fboid, width, height, flip);
 #endif

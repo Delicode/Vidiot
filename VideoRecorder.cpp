@@ -453,6 +453,7 @@ RecorderController::RecorderController() :
     QSettings settings;
     format = settings.value("format", "mp4").toString();
     quality = settings.value("quality", "Medium").toString();
+    setObjectName("RecordController");
 }
 
 void RecorderController::process()

@@ -11,7 +11,10 @@ class StdInListener : public QObject
 {
     Q_OBJECT
 public:
-    StdInListener() : QObject() {}
+    StdInListener() : QObject()
+    {
+        setObjectName("StdInListener");
+    }
 
     QTimer runtimer;
     QElapsedTimer t;

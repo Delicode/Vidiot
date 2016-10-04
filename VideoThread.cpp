@@ -228,7 +228,6 @@
 
 #endif //_WIN32
 
-
 CaptureProcessor::CaptureProcessor() : QObject(NULL),
     player(NULL),
     recorder(NULL),
@@ -636,6 +635,7 @@ CaptureThread::CaptureThread() : QThread()
 
     connect(&processor, SIGNAL(quit()), this, SLOT(quit()));
     connect(&runtimer, SIGNAL(timeout()), &processor, SLOT(process()));
+    setObjectName("capturethread");
 }
 
 void CaptureThread::run()
@@ -655,6 +655,7 @@ RecordThread::RecordThread() : QThread()
     runtimer.moveToThread(this);
 
     connect(&runtimer, SIGNAL(timeout()), &controller, SLOT(process()));
+    setObjectName("recordthread");
 }
 
 void RecordThread::run()
