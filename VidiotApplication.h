@@ -165,7 +165,7 @@ public:
     QHash<QString,QList<QString> > interestingEvents;
 
     // Uncomment to get massive loads of debug about events
-#if 1
+#if 0
     virtual bool notify(QObject *ob, QEvent *ev) {
 
         QString classname = QString(ob->metaObject()->className());
@@ -173,12 +173,13 @@ public:
         if (filterEvents.contains(classname) && filterEvents[classname].contains(eventname))
             return QApplication::notify(ob, ev);
 
+        qDebug() << ob->metaObject()->className() << ", " << ob->objectName() << ", " << eventname;
+
         if (interestingEvents.contains(classname) && interestingEvents[classname].contains(eventname))
         {
             qDebug() << "interesting event " << ob->objectName();
         }
 
-        qDebug() << ob->metaObject()->className() << ", " << ob->objectName() << ", " << eventname;
         return QApplication::notify(ob, ev);
     }
 #endif

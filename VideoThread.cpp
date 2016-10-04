@@ -297,9 +297,8 @@ void CaptureProcessor::updateSourceList()
         sourcelist.append(recent_files);
     }
 
-
-    if(main_view && sourcelist != current_sourcelist)
-        main_view->rootContext()->setContextProperty("sourcelist", sourcelist);
+    if (sourcelist != current_sourcelist)
+        emit sourcesListUpdate(sourcelist);
 
     current_sourcelist = sourcelist;
 }
@@ -618,6 +617,8 @@ void CaptureProcessor::setMainView(QQuickView *mv)
     main_view = mv;
     updateSourceList();
     updateResolutionList();
+    if (main_view)
+        main_view->rootContext()->setContextProperty("sourcelist", current_sourcelist);
 }
 
 

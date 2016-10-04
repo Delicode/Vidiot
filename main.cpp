@@ -199,6 +199,8 @@ int main(int argc, char *argv[])
         player->setObjectName("qtav_player");
 
         VideoView *videoview = object->findChild<VideoView*>();
+        QObject::connect(&thread.processor, SIGNAL(sourcesListUpdate(QStringList)), videoview, SLOT(receiveSourcesList(QStringList)));
+        videoview->setMainView(view);
 
 #ifdef WIN32
         QObject::connect(&fr, SIGNAL(sendFeed(unsigned int, int, int)), &FeedOutput::instance(), SLOT(sendTexture(uint,int,int)));
@@ -210,7 +212,6 @@ int main(int argc, char *argv[])
         QObject::connect(&fr, SIGNAL(sendFeedFbo(unsigned int, int, int)), &FeedOutput::instance(), SLOT(sendFBO(uint,int,int)));
         QObject::connect(&thread.processor, SIGNAL(sendFeedFbo(uint,int,int,bool)), &FeedOutput::instance(), SLOT(sendFBO(uint,int,int,bool)));
 #endif
-
 
         QObject::connect(videoview, SIGNAL(setResolution(QString)), &FeedOutput::instance(), SLOT(setResolution(QString)));
         QObject::connect(&fr, SIGNAL(sendFeed(unsigned int, int, int)), videoview, SLOT(draw(uint,int,int)));
@@ -239,8 +240,6 @@ int main(int argc, char *argv[])
         QObject::connect(&fr, SIGNAL(updateFPS(float)), videoview, SLOT(setFps(float)));
 
         QObject::connect(videoview, SIGNAL(showCameraProperties()), &thread.processor, SLOT(cameraPropertiesRequested()));
-
-        thread.processor.setVideoView(videoview);
     }
     else if(input.startsWith("dshow:///")) {
         QObject::connect(&fr, SIGNAL(sendFeed(unsigned int, int, int)), &FeedOutput::instance(), SLOT(send(uint,int,int)));
