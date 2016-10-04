@@ -165,7 +165,7 @@ public:
     QHash<QString,QList<QString> > interestingEvents;
 
     // Uncomment to get massive loads of debug about events
-#if 1
+#if 0
     virtual bool notify(QObject *ob, QEvent *ev) {
 
         QString classname = QString(ob->metaObject()->className());
