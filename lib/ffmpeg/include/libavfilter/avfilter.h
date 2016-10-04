@@ -29,9 +29,7 @@
  */
 
 /**
- * @defgroup lavfi libavfilter
- * Graph-based frame editing library.
- *
+ * @defgroup lavfi Libavfilter - graph-based frame editing library
  * @{
  */
 
