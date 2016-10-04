@@ -34,6 +34,7 @@ public slots:
 
 signals:
     void sendFeed(unsigned int texid, int width = -1, int height = -1);
+    void sendFeedFbo(unsigned int fboid, int width = -1, int height = -1);
     void sendResolution(int, int);
     void updateFPS(float);
     void pause(bool);

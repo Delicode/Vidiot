@@ -16,6 +16,8 @@
 #define DYGL(glFunc) glFunc
 #endif
 
+#define FBO_RENDERER_BUFFERS 10
+
 namespace QtAV {
 static const VideoRendererId VideoRendererId_FboRenderer = mkid::id32base36_4<'F','B','O','R'>::value;
 
@@ -29,7 +31,7 @@ public:
       , glctx(0)
       , fbo_index(0)
     {
-        for(int i=0; i<3; i++)
+        for(int i=0; i<FBO_RENDERER_BUFFERS; i++)
             fbo[i] = NULL;
     }
 
@@ -38,7 +40,7 @@ public:
     QOpenGLContext *glctx;
     OpenGLVideo glv;
 
-    QOpenGLFramebufferObject *fbo[3];
+    QOpenGLFramebufferObject *fbo[FBO_RENDERER_BUFFERS];
 
     int fbo_index;
 };
@@ -164,7 +166,10 @@ void FboRenderer::drawFrame()
 
         d.fbo[d.fbo_index]->release();
 
+        glFinish();
+
         emit sendFeed(d.fbo[d.fbo_index]->texture(), d.fbo[d.fbo_index]->width(), d.fbo[d.fbo_index]->height());
+        emit sendFeedFbo(d.fbo[d.fbo_index]->handle(), d.fbo[d.fbo_index]->width(), d.fbo[d.fbo_index]->height());
         emit sendResolution(original_w, original_h);
 
         float dt = (float)t.nsecsElapsed()/1000000.f;
@@ -184,7 +189,7 @@ void FboRenderer::drawFrame()
         }
     }
 
-    d.fbo_index = (d.fbo_index+1)%3;
+    d.fbo_index = (d.fbo_index+1)%FBO_RENDERER_BUFFERS;
 }
 
 bool FboRenderer::event(QEvent *e)

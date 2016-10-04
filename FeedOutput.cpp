@@ -1,4 +1,5 @@
 #include "FeedOutput.h"
+#include "predefines.h"
 
 void FeedOutput::ensure(int width, int height)
 {
@@ -10,19 +11,19 @@ void FeedOutput::ensure(int width, int height)
 
     gl->makeCurrent();
 
+    char output_name[256];
+    if(out_name.isEmpty())
+        strcpy(output_name, "Vidiot");
+    else
+        strcpy(output_name, out_name.toLocal8Bit().data());
+
 #ifdef _WIN32
     if(created) {
         // The server will be ok after the next texture send
     }
     else {
-        char spout_name[256];
-        if(out_name.isEmpty())
-            strcpy(spout_name, "Vidiot");
-        else
-            strcpy(spout_name, out_name.toLocal8Bit().data());
-
         spoutserv.SetDX9compatible(true);
-        created = spoutserv.CreateSender(spout_name, w, h);
+        created = spoutserv.CreateSender(output_name, w, h);
 
         if(created) {
             char name[256];
@@ -31,7 +32,7 @@ void FeedOutput::ensure(int width, int height)
         }
         else {
             spoutserv.SetDX9(true);
-            created = spoutserv.CreateSender(spout_name, w, h);
+            created = spoutserv.CreateSender(output_name, w, h);
 
             if(created) {
                 char name[256];
@@ -43,7 +44,28 @@ void FeedOutput::ensure(int width, int height)
         }
     }
 #else
-    /* TODO: syphon */
+    GLER
+
+    if (!syphonserver)
+        syphonserver = new DelicodeSyphonServer();
+    if (!syphonserver->createServer(output_name))
+    {
+        qDebug() << "Failed creating Syphon output";
+    }
+    else
+    {
+        if (!syphonserver->startServing())
+        {
+            qDebug() << "Couldn't start syphon server";
+        }
+        else
+        {
+            created = true;
+            feedname = output_name;
+            qDebug() << "Syphon output created " << feedname;
+        }
+    }
+
 #endif
 
     gl->doneCurrent();
@@ -57,16 +79,40 @@ void FeedOutput::sendTexture(unsigned int texid, int width, int height, bool fli
     if(!created)
         return;
 
+    GLER
+
     gl->makeCurrent();
 #ifdef _WIN32
     spoutserv.SendTexture(texid, GL_TEXTURE_2D, width, height, flip);
 #else
-    /* TODO: syphon */
+    //syphonserver->publishTexture(texid, width, height, flip);
 #endif
 
     glFinish();
     gl->doneCurrent();
 }
+
+void FeedOutput::sendFBO(unsigned int fboid, int width, int height, bool flip)
+{
+    if(width > 0 && height > 0)
+        ensure(width, height);
+
+    if(!created)
+        return;
+
+    GLER
+
+    gl->makeCurrent();
+#ifdef _WIN32
+    spoutserv.SendFBO(fboid, GL_TEXTURE_2D, width, height, flip);
+#else
+    syphonserver->publishFBO(fboid, width, height, flip);
+#endif
+
+    glFinish();
+    gl->doneCurrent();
+}
+
 
 QStringList FeedOutput::listSources(bool list_self)
 {
@@ -91,7 +137,14 @@ QStringList FeedOutput::listSources(bool list_self)
 #endif
 
 #ifdef __APPLE__
-    // TODO: Add syphon
+    char server_list[4096];
+    DelicodeSyphonServer::getServers(server_list);
+    QStringList servers = QString(server_list).split('|', QString::SkipEmptyParts);
+    for (int i = 0; i < servers.count(); i++)
+    {
+        list << QString("feed:///") + servers.at(i) + "?!*30 fps";
+        list << QString("feed:///") + servers.at(i) + "?*30 fps";
+    }
 #endif
     return list;
 }

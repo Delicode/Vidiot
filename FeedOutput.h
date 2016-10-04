@@ -10,6 +10,9 @@
 #ifdef _WIN32
 #include "external/Spout/Spout.h"
 #endif
+#ifdef __APPLE__
+#include "DelicodeSyphonServer.h"
+#endif
 
 class FeedOutput : public QObject
 {
@@ -38,6 +41,7 @@ public:
 
 public slots:
     void sendTexture(unsigned int texid, int width = -1, int height = -1, bool flip = true);
+    void sendFBO(unsigned int fboid, int width = -1, int height = -1, bool flip = true);
     void setResolution(QString resolution_str) {resolution = resolution_str;}
 
 private:
@@ -55,11 +59,14 @@ private:
         QApplication::processEvents();
         gl->hide();
         QApplication::processEvents();
+        syphonserver = NULL;
     }
 
     ~FeedOutput() {
         if(gl)
             delete gl;
+        if (syphonserver)
+            delete syphonserver;
     }
 
     /* don't allow copying */
@@ -71,6 +78,9 @@ private:
     int w, h;
 #ifdef _WIN32
     SpoutSender spoutserv;
+#endif
+#ifdef __APPLE__
+    DelicodeSyphonServer* syphonserver;
 #endif
     QString out_name;
 

@@ -6,8 +6,7 @@
 #include "VideoPlayer.h"
 #include <QOpenGLShaderProgram>
 
-#define GLER {GLenum er = glGetError(); if(er != GL_NO_ERROR) qDebug() << "GLerror" << __FILE__ << ", " << __LINE__ << er;}
-
+#include "predefines.h"
 
 char glsl_color[] = {
     "#version 150\n"

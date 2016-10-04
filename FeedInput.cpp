@@ -52,19 +52,20 @@ FeedInput::~FeedInput()
 #endif
 
 #ifdef __APPLE__
-        // TODO: Add syphon
+        syphonreceiver.release();
 #endif
     }
 }
 
 void FeedInput::ensureFeed()
 {
-#ifdef _WIN32
     if(!feedreceiver_created) {
         gl->makeCurrent();
 
         char name[256];
         sprintf(name, feed_name.toLocal8Bit().data());
+
+#ifdef _WIN32
 
         feedreceiver_created = spoutreceiver.CreateReceiver(name, input_width, input_height);
 
@@ -80,11 +81,17 @@ void FeedInput::ensureFeed()
             else
                 qDebug() << "Spout receiver couldn't be initialized.";
         }
+#else
+        syphonreceiver.setName(name);
+        feedreceiver_created = syphonreceiver.connectToServer();
+
+        if (feedreceiver_created == false)
+        {
+            qDebug() << "Failed starting Syphon receiver: " << name;
+        }
+#endif
         gl->doneCurrent();
     }
-#else
-    /* TODO: syphon */
-#endif
 }
 
 bool FeedInput::receiveFeed()
@@ -94,8 +101,11 @@ bool FeedInput::receiveFeed()
     sprintf(name, feed_name.toLocal8Bit().data());
     return spoutreceiver.ReceiveTexture(name, input_width, input_height, input_fbo->texture(), GL_TEXTURE_2D, true);
 #else
-    /* TODO: syphon */
-    return false;
+    if (!syphonreceiver.update(input_width, input_height))
+        return false;
+    ensureFBO();
+    syphonreceiver.copyToTexture(input_fbo->texture());
+    return true;
 #endif
 }
 
@@ -183,13 +193,18 @@ void FeedInput::capture(QString resolution)
 
 
     gl->makeCurrent();
+#ifdef WIN32
     ensureFBO();
+#endif
 
     if(!receiveFeed()) {
         qDebug() << "Error receiving texture";
         gl->doneCurrent();
         return;
     }
+
+    if (input_fbo->width() == 0 || input_fbo->height() == 0)
+        return;
 
     QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
 
