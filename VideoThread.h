@@ -96,6 +96,7 @@ signals:
     void stopRecording();
     void newRecorderFrame(RecorderFrame fr);
     void sourcesListUpdate(QStringList);
+    void resolutionsChanged(QStringList);
 
 private:
     QString resolution;
