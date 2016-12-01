@@ -241,8 +241,8 @@ int main(int argc, char *argv[])
         QObject::connect(videoview, SIGNAL(showCameraProperties()), &thread.processor, SLOT(cameraPropertiesRequested()));
     }
     else if(input.startsWith("dshow:///")) {
-        QObject::connect(&fr, SIGNAL(sendFeed(unsigned int, int, int)), &FeedOutput::instance(), SLOT(send(uint,int,int)));
-        QObject::connect(&thread.processor, SIGNAL(sendFeed(uint,int,int,bool)), &FeedOutput::instance(), SLOT(send(uint,int,int,bool)));
+        QObject::connect(&fr, SIGNAL(sendFeed(unsigned int, int, int)), &FeedOutput::instance(), SLOT(sendTexture(uint,int,int)));
+        QObject::connect(&thread.processor, SIGNAL(sendFeed(uint,int,int,bool)), &FeedOutput::instance(), SLOT(sendTexture(uint,int,int,bool)));
 
         thread.processor.setSource(input);
         thread.processor.setPingRequired(true);
@@ -268,8 +268,8 @@ int main(int argc, char *argv[])
         rthread.controller.setQuality(quality);
     }
     else {
-        QObject::connect(&fr, SIGNAL(sendFeed(unsigned int, int, int)), &FeedOutput::instance(), SLOT(send(uint,int,int)));
-        QObject::connect(&thread.processor, SIGNAL(sendFeed(uint,int,int,bool)), &FeedOutput::instance(), SLOT(send(uint,int,int,bool)));
+        QObject::connect(&fr, SIGNAL(sendFeed(unsigned int, int, int)), &FeedOutput::instance(), SLOT(sendTexture(uint,int,int)));
+        QObject::connect(&thread.processor, SIGNAL(sendFeed(uint,int,int,bool)), &FeedOutput::instance(), SLOT(sendTexture(uint,int,int,bool)));
 
         player = &plr;
 
