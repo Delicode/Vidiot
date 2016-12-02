@@ -1,18 +1,14 @@
 #ifndef VIDEOTHREAD_H
 #define VIDEOTHREAD_H
 
-#include <QThread>
-#include <QOpenGLWidget>
-#include <QMutex>
-#include <QQuickView>
-#include <QElapsedTimer>
-
 #include "VideoPlayer.h"
 #include "TextureUploader.h"
 #include "TextureDownloader.h"
 #include "FeedInput.h"
 #include "VideoRecorder.h"
 #include "VideoView.h"
+
+#include "predefines.h"
 
 class CaptureProcessor : public QObject
 {

@@ -1,9 +1,7 @@
 #ifndef FBO_RENDERER_H
 #define FBO_RENDERER_H
 
-#include <QtAV>
-#include <QOpenGLWidget>
-#include <QOpenGLFunctions_3_2_Core>
+#include "predefines.h"
 
 namespace QtAV {
 

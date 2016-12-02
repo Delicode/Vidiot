@@ -1,19 +1,5 @@
 #include "VideoThread.h"
-
-#include <QFile>
-#include <QOpenGLContext>
-#include <QApplication>
-#include <QQmlContext>
-#include <QStandardPaths>
-#include <QDir>
-#include <QDateTime>
-#include <QSettings>
-#include <QDebug>
-
-#include <iostream>
-
 #include "FeedOutput.h"
-
 
 #ifdef _WIN32
     #include "Spout.h"

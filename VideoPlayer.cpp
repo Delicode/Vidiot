@@ -1,7 +1,4 @@
 #include "VideoPlayer.h"
-#include <QThread>
-#include <QDebug>
-#include <iostream>
 
 #ifdef WIN32
 #include <windows.h>
@@ -9,8 +6,6 @@
 #include <strmif.h>
 #include <dvdmedia.h>
 #endif
-
-#include <QtConcurrentRun>
 
 extern "C"
 {
@@ -218,10 +213,10 @@ VideoPlayer::VideoPlayer(QString filename) : QObject(NULL),
         }
         else {
             if(w > 0 && h > 0)
-                av_dict_set(&options, "video_size", QString("%1x%2").arg(w).arg(h).toLocal8Bit().data(), NULL);
+                av_dict_set(&options, "video_size", QString("%1x%2").arg(w).arg(h).toLocal8Bit().data(), 0);
             //av_dict_set(&options, "vcodec", "mjpeg", NULL);
             if(f > 0)
-                av_dict_set(&options, "framerate", QString::number(f).toLocal8Bit().data(), NULL);
+                av_dict_set(&options, "framerate", QString::number(f).toLocal8Bit().data(), 0);
 
             if(codec == "mjpeg") {
                 pFormatCtx->video_codec_id = AV_CODEC_ID_MJPEG;

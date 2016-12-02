@@ -1,7 +1,5 @@
 #include "TextureDownloader.h"
 
-#include <QOpenGLFunctions>
-
 TextureDownloader::TextureDownloader(QOpenGLWidget *glwid) : QObject(NULL),
     gl(glwid),
     preroll(2),

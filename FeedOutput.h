@@ -1,11 +1,7 @@
 #ifndef FEED_OUTPUT_H
 #define FEED_OUTPUT_H
 
-#include <QObject>
-#include <QOpenGLWidget>
-#include <QOpenGLFramebufferObject>
-#include <QApplication>
-#include <QDebug>
+#include "predefines.h"
 
 #ifdef _WIN32
 #include "external/Spout/Spout.h"

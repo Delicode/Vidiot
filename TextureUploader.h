@@ -1,9 +1,7 @@
 #ifndef TEXTURE_UPLOADER_H
 #define TEXTURE_UPLOADER_H
 
-#include <QOpenGLWidget>
-#include <QOpenGLFramebufferObject>
-#include <QOpenGLBuffer>
+#include "predefines.h"
 
 class TextureUploader : public QObject
 {

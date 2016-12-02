@@ -1,8 +1,7 @@
 #ifndef VIDIOTAPPLICATION_H
 #define VIDIOTAPPLICATION_H
 
-#include <QApplication>
-#include <QDebug>
+#include "predefines.h"
 
 static QString eventToName(QEvent *ev)
 {

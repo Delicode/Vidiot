@@ -1,9 +1,7 @@
 #ifndef TEXTURE_DOWNLOADER_H
 #define TEXTURE_DOWNLOADER_H
 
-#include <QOpenGLWidget>
-#include <QOpenGLFramebufferObject>
-#include <QOpenGLBuffer>
+#include "predefines.h"
 
 #define RECORD_BUFS 20
 

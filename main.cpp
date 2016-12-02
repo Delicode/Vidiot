@@ -1,21 +1,10 @@
 #include "VideoView.h"
-#include <QApplication>
-#include <QFile>
-
-#include <QQuickView>
-#include <QQmlContext>
-#include <QSettings>
-#include <QBuffer>
-#include <QScreen>
-
 #include "VideoThread.h"
 #include "FboRenderer.h"
 #include "FeedOutput.h"
 #include "StdInThread.h"
 #include "VidiotApplication.h"
-
-#include <QtAV>
-#include <iostream>
+#include "predefines.h"
 
 QQuickView *view = NULL;
 

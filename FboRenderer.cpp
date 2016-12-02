@@ -1,12 +1,6 @@
 #include "FboRenderer.h"
 #include "QtAV/private/VideoRenderer_p.h"
 #include "QtAV/private/mkid.h"
-
-#include <QtCore/QCoreApplication>
-#include <QApplication>
-#include <QOpenGLFramebufferObject>
-#include <QThread>
-
 #include "FeedOutput.h"
 
 #ifdef QT_OPENGL_DYNAMIC

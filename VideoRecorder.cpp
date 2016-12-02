@@ -1,19 +1,8 @@
 #include "VideoRecorder.h"
 
-#include <QMap>
-#include <QSettings>
-#include <QApplication>
-#include <QDebug>
-#include <iostream>
-#include <QDir>
-#include <QStandardPaths>
-#include <QDateTime>
-
-
 #define SET_ERROR_RETURN(description) { qDebug() << description; error = true; return; }
 #define SET_ERROR_RETURN_NULL(description) { qDebug() << description; error = true; return NULL; }
 #define SET_ERROR_RETURN_FALSE(description) { qDebug() << description; error = true; return false; }
-
 
 AVCodecID VideoRecorder::codec_h264_qsv = AV_CODEC_ID_NONE;
 AVCodecID VideoRecorder::codec_prores = AV_CODEC_ID_NONE;

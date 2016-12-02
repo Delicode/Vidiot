@@ -1,13 +1,7 @@
 #ifndef VIDEO_VIEW_H
 #define VIDEO_VIEW_H
 
-#include <QQuickView>
-#include <QQuickFramebufferObject>
-#include <QTimer>
-
-#include <QOpenGLShaderProgram>
-#include <QOpenGLBuffer>
-#include <QOpenGLFunctions_3_2_Core>
+#include "predefines.h"
 
 class FboDrawer {
     bool init_glbuffers;

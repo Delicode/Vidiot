@@ -1,8 +1,7 @@
 #ifndef DELICODE_SYPHON_SERVER
 #define DELICODE_SYPHON_SERVER
 
-#include <QStringList>
-#include <QList>
+#include "predefines.h"
 
 class DelicodeSyphonServer {
 public:

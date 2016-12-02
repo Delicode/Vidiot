@@ -1,13 +1,5 @@
 #include "VideoView.h"
-#include <QOpenGLFunctions>
-#include <QDebug>
-#include <QPainter>
-#include <QOpenGLFramebufferObjectFormat>
 #include "VideoPlayer.h"
-#include <QQmlContext>
-#include <QOpenGLShaderProgram>
-
-#include "predefines.h"
 
 char glsl_color[] = {
     "#version 150\n"

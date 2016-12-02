@@ -1,9 +1,7 @@
 #ifndef VIDEOPLAYER_H
 #define VIDEOPLAYER_H
 
-#include <QElapsedTimer>
-#include <QOpenGLWidget>
-#include <QOpenGLFramebufferObject>
+#include "predefines.h"
 
 extern "C"
 {

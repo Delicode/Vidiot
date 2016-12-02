@@ -1,7 +1,4 @@
 #include "TextureUploader.h"
-#include <QOpenGLFunctions>
-#include <QApplication>
-#include <QDebug>
 
 TextureUploader::TextureUploader(QOpenGLWidget *glwid) : QObject(NULL),
     subdata(NULL),

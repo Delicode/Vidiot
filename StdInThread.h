@@ -1,11 +1,7 @@
 #ifndef STDIN_THREAD_H
 #define STDIN_THREAD_H
 
-#include <QThread>
-#include <iostream>
-#include <QTimer>
-#include <QElapsedTimer>
-#include <QApplication>
+#include "predefines.h"
 
 class StdInListener : public QObject
 {

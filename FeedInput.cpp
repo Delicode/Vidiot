@@ -1,9 +1,4 @@
 #include "FeedInput.h"
-#include <QOpenGLFunctions>
-#include <QApplication>
-#include <QThread>
-#include <QDebug>
-#include <math.h>
 
 FeedInput::FeedInput(QString name, QOpenGLWidget *glwid) : QObject(NULL),
     feedreceiver_created(false),

@@ -1,8 +1,6 @@
 #include "DelicodeSyphonServer.h"
 #include "QImage.h"
 #import "Lib/Syphon.framework/Headers/Syphon.h"
-#import <OpenGL/CGLMacro.h>
-
 #include <qdebug.h>
 
 DelicodeSyphonServer::DelicodeSyphonServer()

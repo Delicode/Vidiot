@@ -1,11 +1,7 @@
 #ifndef FEED_INPUT_H
 #define FEED_INPUT_H
 
-#include <QOpenGLWidget>
-#include <QOpenGLFramebufferObject>
-#include <QMutex>
-#include <QOpenGLBuffer>
-#include <QElapsedTimer>
+#include "predefines.h"
 #include "DelicodeSyphonServer.h"
 
 #ifdef _WIN32

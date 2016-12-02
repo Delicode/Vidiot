@@ -1,8 +1,7 @@
 #ifndef VIDEORECORDER_H
 #define VIDEORECORDER_H
 
-#include <QElapsedTimer>
-#include <QObject>
+#include "predefines.h"
 
 extern "C"
 {
