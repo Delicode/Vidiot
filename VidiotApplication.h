@@ -35,7 +35,6 @@ static QString eventToName(QEvent *ev)
     case 170: return "DynamicPropertyChange";
     case 98: return "EnabledChange";
     case 10: return "Enter";
-    case 150: return "EnterEditFocus";
     case 124: return "EnterWhatsThisMode";
     case 206: return "Expose";
     case 116: return "FileOpen";
@@ -79,7 +78,6 @@ static QString eventToName(QEvent *ev)
     case 90: return "LayoutDirectionChange";
     case 76: return "LayoutRequest";
     case 11: return "Leave";
-    case 151: return "LeaveEditFocus";
     case 125: return "LeaveWhatsThisMode";
     case 88: return "LocaleChange";
     case 176: return "NonClientAreaMouseButtonDblClick";
