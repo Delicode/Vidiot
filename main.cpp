@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
                 img.scaled(w, h, Qt::KeepAspectRatio, Qt::SmoothTransformation).save(&buffer, "JPG");
                 buffer.close();
 
-                std::cout << "length:" << p.duration << ":thumbnail:" << ba.toBase64().data() << std::endl;
+                std::cout << ":extract_thumbnail:length:" << p.duration << ":thumbnail:" << ba.toBase64().data() << std::endl;
             }
             return 0;
         }
