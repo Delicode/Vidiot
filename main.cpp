@@ -243,8 +243,16 @@ int main(int argc, char *argv[])
         QObject::connect(videoview, SIGNAL(showCameraProperties()), &thread.processor, SLOT(cameraPropertiesRequested()));
     }
     else if(input.startsWith("dshow:///")) {
+#ifdef WIN32
         QObject::connect(&fr, SIGNAL(sendFeed(unsigned int, int, int)), &FeedOutput::instance(), SLOT(sendTexture(uint,int,int)));
         QObject::connect(&thread.processor, SIGNAL(sendFeed(uint,int,int,bool)), &FeedOutput::instance(), SLOT(sendTexture(uint,int,int,bool)));
+#endif
+#ifdef __APPLE__
+        // On OS X syphon refuses to transfer textures, but is fine with FBOs
+        // Probably something about using rectangle textures instead of square textures
+        QObject::connect(&fr, SIGNAL(sendFeedFbo(unsigned int, int, int)), &FeedOutput::instance(), SLOT(sendFBO(uint,int,int)));
+        QObject::connect(&thread.processor, SIGNAL(sendFeedFbo(uint,int,int,bool)), &FeedOutput::instance(), SLOT(sendFBO(uint,int,int,bool)));
+#endif
 
         thread.processor.setSource(input);
         thread.processor.setPingRequired(true);
@@ -270,8 +278,16 @@ int main(int argc, char *argv[])
         rthread.controller.setQuality(quality);
     }
     else {
+#ifdef WIN32
         QObject::connect(&fr, SIGNAL(sendFeed(unsigned int, int, int)), &FeedOutput::instance(), SLOT(sendTexture(uint,int,int)));
         QObject::connect(&thread.processor, SIGNAL(sendFeed(uint,int,int,bool)), &FeedOutput::instance(), SLOT(sendTexture(uint,int,int,bool)));
+#endif
+#ifdef __APPLE__
+        // On OS X syphon refuses to transfer textures, but is fine with FBOs
+        // Probably something about using rectangle textures instead of square textures
+        QObject::connect(&fr, SIGNAL(sendFeedFbo(unsigned int, int, int)), &FeedOutput::instance(), SLOT(sendFBO(uint,int,int)));
+        QObject::connect(&thread.processor, SIGNAL(sendFeedFbo(uint,int,int,bool)), &FeedOutput::instance(), SLOT(sendFBO(uint,int,int,bool)));
+#endif
 
         player = &plr;
 
