@@ -154,6 +154,9 @@ bool DelicodeSyphonServer::unbindFBO()
 
 bool DelicodeSyphonServer::publishFBO(unsigned int id, int res_x, int res_y, bool flip)
 {
+    // reset errors before calling the functions
+    GLenum err = glGetError();
+
 	if(id)
 	{
 		CGLContextObj cgl_ctx = CGLGetCurrentContext();
@@ -162,6 +165,12 @@ bool DelicodeSyphonServer::publishFBO(unsigned int id, int res_x, int res_y, boo
 			context_is_valid = false;
 			return false;
 		}
+        err = glGetError();
+        if (err != GL_NO_ERROR)
+        {
+            qDebug() << "error getting current context: " << err;
+        }
+
 
 		if (!mSyphon)
 		{
@@ -174,13 +183,16 @@ bool DelicodeSyphonServer::publishFBO(unsigned int id, int res_x, int res_y, boo
 			{
 				return false;
 			}
+            err = glGetError();
+            if (err != GL_NO_ERROR)
+            {
+                qDebug() << "error initting syphon: " << err;
+            }
 		}
 
 		NSSize res;
 		res.width = 1024;
 		res.height = 1024;
-
-		GLenum err = glGetError();
 
 		SyphonServer* serv = (SyphonServer *)mSyphon;
 
