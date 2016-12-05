@@ -271,6 +271,6 @@ sh replace_ffmpeg_paths.sh
 
 cd $CWD
 cp ../quality.ini $BUNDLE_PATH/Contents/MacOS
-cp ../resources/Vidiot.plist $BUNDLE_PATH/Contents/Info.plist
-cp ../resources/vidiot.icns $BUNDLE_PATH/Contents/Resources/icon.icns
+cp ../resources/MyInfo.plist $BUNDLE_PATH/Contents/Info.plist
+cp ../resources/Vidiot.icns $BUNDLE_PATH/Contents/Resources/icon.icns
 
