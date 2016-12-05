@@ -130,7 +130,6 @@ CONFIG(debug, debug|release) {
     QMAKE_POST_LINK += $$addPBC(echo "$$BRANCH")
 }
 
-
 macx {
     OBJECTIVE_SOURCES += DelicodeSyphonServer.mm
     HEADERS += DelicodeSyphonServer.h
@@ -149,7 +148,8 @@ macx {
 DISTFILES += \
 	qml/main.qml \
 	qml/SimpleButton.qml \
-	qml/SimpleList.qml
+	qml/SimpleList.qml \
+    resources/Vidiot.icns
 
 RESOURCES += qml.qrc \
     media.qrc

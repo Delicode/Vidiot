@@ -3,6 +3,8 @@ vidiot.build_config
 *.obj
 *.o
 *.user
+*.dmg
+*.svn
 
 lib/ffmpeg/lib
 lib/QtAV/lib/
