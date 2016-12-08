@@ -6,6 +6,11 @@
 #include "VidiotApplication.h"
 #include "predefines.h"
 
+#ifdef __APPLE__
+    #include <ApplicationServices/ApplicationServices.h>
+    #include "MacWindowInitializer.h"
+#endif
+
 QQuickView *view = NULL;
 
 QStringList formatList()
@@ -163,7 +168,21 @@ int main(int argc, char *argv[])
     QObject::connect(&thread.processor, SIGNAL(newRecorderFrame(RecorderFrame)), &rthread.controller, SLOT(recorderFrame(RecorderFrame)));
     QObject::connect(&thread.processor, SIGNAL(stopRecording()), &rthread.controller, SLOT(stop()));
 
-    if(input.isEmpty()) {
+    if(input.isEmpty())
+    {
+#ifdef __APPLE__
+        // The MyInfo.plist file sets LSBackgroundOnly to 1 to not show Dock icon by default
+        // This is to hide the icon for when Vidiöt is launched via other software (ie. Z Vector)
+        // Since this branch starts Vidiöt with a GUI we want the dock icon to appear
+        ProcessSerialNumber psn;
+        GetCurrentProcess(&psn);
+        TransformProcessType(&psn, kProcessTransformToForegroundApplication);
+        MacWindowInitializer::setApplicationAsUIElement();
+        MacWindowInitializer::setFront();
+
+        QCoreApplication::processEvents();
+#endif
+
         view = new QQuickView();
         view->setTitle("Vidiöt");
 

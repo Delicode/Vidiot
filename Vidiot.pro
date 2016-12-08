@@ -131,8 +131,12 @@ CONFIG(debug, debug|release) {
 }
 
 macx {
-    OBJECTIVE_SOURCES += DelicodeSyphonServer.mm
-    HEADERS += DelicodeSyphonServer.h
+    OBJECTIVE_SOURCES += DelicodeSyphonServer.mm \
+                         MacWindowInitializer.mm
+
+    HEADERS += DelicodeSyphonServer.h \
+               MacWindowInitializer.h
+
 	QMAKE_INFO_PLIST = resources/MyInfo.plist
     LIBS += -framework IOKit -framework CoreFoundation -framework CoreServices -framework ApplicationServices -framework AppKit
 
