@@ -5,6 +5,6 @@ vidiot.build_config
 *.user
 *.dmg
 *.svn
-
+*.DS_Store
 lib/ffmpeg/lib
 lib/QtAV/lib/
