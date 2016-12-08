@@ -1,4 +1,9 @@
 #!/bin/sh -e
+#
+# This script creates an app bundle out of the compiled binary
+# The script copies assorted lib files into the bundle and then changes all @rpath and @loader_path
+# into @executable_path as we've found that this method gives us the least headache later.
+# This script does not build the .dmg
 
 cd "$(dirname "$0")"
 
@@ -10,6 +15,8 @@ source vidiot_build_details.sh
 BUNDLE_PATH="${BUILD_DIR}/Vidiot.app"
 
 CURRENT_DIR=$(pwd)
+
+# TODO: make these dynamic
 QT_DIR=/Users/Delicode1/Qt56/5.6/clang_64/lib
 QT_QML_DIR=/Users/Delicode1/Qt56/5.6/clang_64/qml
 QT_LIB_PATH=@rpath
@@ -25,6 +32,7 @@ AVRESAMPLE_VERSION=3
 AVFILTER_VERSION=6
 QT_VERSION=5
 QTAV_VERSION=1
+
 if [ "$BUILD_MODE" == "DEBUG" ]; then
     # You must rename a couple of *_debug.dylib libs into *.dylib
     # in the QtAV build dir as well as the QML build dir
@@ -45,6 +53,8 @@ fi
 
 if [ "$BUILD_MODE" == "DEBUG" ]; then
     echo "Copying QT frameworks (debug)..."
+    # When calling macdeployqt it's necessary to specify -use-debug-libs if you want to step through
+    # the code in the app bundle. Not using the flag appears to strip any debuggign information
     ~/Qt56/5.6/clang_64/bin/macdeployqt $BUNDLE_PATH -use-debug-libs
 fi
 
@@ -59,6 +69,8 @@ cp -rv ../lib/QtAV/lib/osx/QtAVWidgets.framework $BUNDLE_PATH/Contents/Framework
 cp -rv ../lib/QtAV/lib/osx/libQmlAV.dylib $BUNDLE_PATH/Contents/Frameworks/
 cp -rv ../lib/QtAV/lib/osx/libcommon.a $BUNDLE_PATH/Contents/Frameworks/
 
+# These scripts walk through all libraries and replace assorted @rpath references between them
+# into hardcoded @executable_path references
 cp replace_rpaths.sh $BUNDLE_PATH/Contents/Frameworks
 cp replace_debug_paths.sh $BUNDLE_PATH/Contents/Frameworks
 cp replace_plugin_rpaths.sh $BUNDLE_PATH/Contents/PlugIns/imageformats
@@ -82,6 +94,10 @@ cd $BUNDLE_PATH/Contents/plugins/bearer
 sh replace_plugin_rpaths.sh
 
 if [ "$BUILD_MODE" = "DEBUG" ]; then
+
+    # If macdeployqt is called with the debug flag the Qt libs are trying to search for
+    # *_debug versions of the other Qt libs inside the app bundle. So just change them all to
+    # search for non-debug filenames, even though the libs actually are debug versions.
     cd $BUNDLE_PATH/Contents/Frameworks
     echo "Replacing debug paths"
     sh replace_debug_paths.sh
@@ -270,7 +286,12 @@ cd $BUNDLE_PATH/Contents/Frameworks
 sh replace_ffmpeg_paths.sh
 
 cd $CWD
+
+# The quality.ini is crucial as Vidiöt won't run without it
 cp ../quality.ini $BUNDLE_PATH/Contents/MacOS
+
+# The .plist file is necessary to make the app into a background app by default
+# This prevents the icon from popping up annoyingly when Vidiöt is executed in background mode
 cp ../resources/MyInfo.plist $BUNDLE_PATH/Contents/Info.plist
 cp ../resources/Vidiot.icns $BUNDLE_PATH/Contents/Resources/icon.icns
 
