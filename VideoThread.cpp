@@ -57,7 +57,7 @@
         IEnumMoniker *pEnum;
         hr = pDevEnum->CreateClassEnumerator(CLSID_VideoInputDeviceCategory,&pEnum,0);
 
-        if(FAILED(hr))
+        if(FAILED(hr) || pEnum == NULL)
         {
             return deviceNames;
         }
