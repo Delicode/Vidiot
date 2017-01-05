@@ -3,7 +3,7 @@ QT += core gui opengl widgets quick concurrent
 TARGET = Vidiot
 TEMPLATE = app
 MAJOR_VERSION = 1
-MINOR_VERSION = 00
+MINOR_VERSION = 01
 REVISION = $$system(git log --pretty=format:%h -n 1)
 DEFINES += PRODUCT_REVISION=r$$REVISION
 DEFINES += MAJOR_VERSION=$$MAJOR_VERSION
