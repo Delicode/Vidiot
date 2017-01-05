@@ -68,6 +68,7 @@ cp -rv ../lib/QtAV/lib/osx/QtAV.framework $BUNDLE_PATH/Contents/Frameworks/
 cp -rv ../lib/QtAV/lib/osx/QtAVWidgets.framework $BUNDLE_PATH/Contents/Frameworks/
 cp -rv ../lib/QtAV/lib/osx/libQmlAV.dylib $BUNDLE_PATH/Contents/Frameworks/
 cp -rv ../lib/QtAV/lib/osx/libcommon.a $BUNDLE_PATH/Contents/Frameworks/
+cp -v ../LICENSE $BUNDLE_PATH/Contents/Resources
 
 # These scripts walk through all libraries and replace assorted @rpath references between them
 # into hardcoded @executable_path references
