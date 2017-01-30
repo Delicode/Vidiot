@@ -22,6 +22,7 @@ QT_QML_DIR=/Users/Delicode1/Qt56/5.6/clang_64/qml
 QT_LIB_PATH=@rpath
 QT_FOLDER=framework/Versions/5
 FFMPEG_FOLDER=/usr/local/opt/ffmpeg/lib
+FFMPEG_VERSION=3.2.2
 AVDEVICE_VERSION=57
 AVCODEC_VERSION=57
 AVFORMAT_VERSION=57
@@ -30,6 +31,7 @@ AVUTIL_VERSION=55
 SWRESAMPLE_VERSION=2
 AVRESAMPLE_VERSION=3
 AVFILTER_VERSION=6
+ICONV_VERSION=2
 QT_VERSION=5
 QTAV_VERSION=1
 
@@ -208,6 +210,7 @@ cp -v $FFMPEG_FOLDER/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frame
 cp -v $FFMPEG_FOLDER/libswresample.$SWRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/
 cp -v $FFMPEG_FOLDER/libavresample.$AVRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/
 cp -v $FFMPEG_FOLDER/libavfilter.$AVFILTER_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/
+cp -v /usr/lib/libiconv.$ICONV_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks
 
 cp -v /usr/local/opt/x264/lib/libx264.148.dylib $BUNDLE_PATH/Contents/Frameworks
 cp -v /usr/local/opt/lame/lib/libmp3lame.0.dylib $BUNDLE_PATH/Contents/Frameworks
@@ -272,6 +275,12 @@ install_name_tool -change $FFMPEG_FOLDER/libavresample.$AVRESAMPLE_VERSION.dylib
 install_name_tool -change $FFMPEG_FOLDER/libavdevice.$AVDEVICE_VERSION.dylib @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib $BUNDLE_PATH/Contents/Resources/qml/QtAV/libQmlAV.dylib
 install_name_tool -change $FFMPEG_FOLDER/libavfilter.$AVFILTER_VERSION.dylib @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib $BUNDLE_PATH/Contents/Resources/qml/QtAV/libQmlAV.dylib
 
+install_name_tool -change @rpath/QtGui$QT_FOLDER/QtGui i@executable_path/../Frameworks/QtGui$QT_FOLDER/QtGui $BUNDLE_PATH/Contents/Resources/qml/QtAV/libQmlAV.dylib
+install_name_tool -change @rpath/QtCore$QT_FOLDER/QtCore i@executable_path/../Frameworks/QtCore$QT_FOLDER/QtCore $BUNDLE_PATH/Contents/Resources/qml/QtAV/libQmlAV.dylib
+install_name_tool -change @rpath/QtQuick$QT_FOLDER/QtQuick i@executable_path/../Frameworks/QtQuick$QT_FOLDER/QtQuick $BUNDLE_PATH/Contents/Resources/qml/QtAV/libQmlAV.dylib
+install_name_tool -change @rpath/QtQml$QT_FOLDER/QtQml i@executable_path/../Frameworks/QtQml$QT_FOLDER/QtQml $BUNDLE_PATH/Contents/Resources/qml/QtAV/libQmlAV.dylib
+install_name_tool -change @rpath/QtNetwork$QT_FOLDER/QtNetwork i@executable_path/../Frameworks/QtNetwork$QT_FOLDER/QtNetwork $BUNDLE_PATH/Contents/Resources/qml/QtAV/libQmlAV.dylib
+
 install_name_tool -change $FFMPEG_FOLDER/libavcodec.$AVCODEC_VERSION.dylib @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
 install_name_tool -change $FFMPEG_FOLDER/libavformat.$AVFORMAT_VERSION.dylib @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
 install_name_tool -change $FFMPEG_FOLDER/libswscale.$SWSCALE_VERSION.dylib @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
@@ -280,6 +289,51 @@ install_name_tool -change $FFMPEG_FOLDER/libswresample.$SWRESAMPLE_VERSION.dylib
 install_name_tool -change $FFMPEG_FOLDER/libavresample.$AVRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
 install_name_tool -change $FFMPEG_FOLDER/libavdevice.$AVDEVICE_VERSION.dylib @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
 install_name_tool -change $FFMPEG_FOLDER/libavfilter.$AVFILTER_VERSION.dylib @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
+
+install_name_tool -change @rpath/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib
+install_name_tool -change /usr/lib/libiconv.$ICONV_VERSION.dylib @executable_path/../Frameworks/libiconv.$ICONV_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib
+
+install_name_tool -change @rpath/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib
+install_name_tool -change /usr/lib/libiconv.$ICONV_VERSION.dylib @executable_path/../Frameworks/libiconv.$ICONV_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib
+
+install_name_tool -change @rpath/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavcodec.$AVCODEC_VERSION.dylib
+install_name_tool -change @rpath/libswresample.$SWRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavcodec.$AVCODEC_VERSION.dylib
+install_name_tool -change /usr/lib/libiconv.$ICONV_VERSION.dylib @executable_path/../Frameworks/libiconv.$ICONV_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavcodec.$AVCODEC_VERSION.dylib
+
+install_name_tool -change @rpath/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavdevice.$AVDEVICE_VERSION.dylib
+install_name_tool -change @rpath/libswscale.$SWSCALE_VERSION.dylib @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavdevice.$AVDEVICE_VERSION.dylib
+install_name_tool -change @rpath/libavresample.$AVRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavdevice.$AVDEVICE_VERSION.dylib
+install_name_tool -change @rpath/libavformat.$AVFORMAT_VERSION.dylib @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavdevice.$AVDEVICE_VERSION.dylib
+install_name_tool -change @rpath/libavcodec.$AVCODEC_VERSION.dylib @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavdevice.$AVDEVICE_VERSION.dylib
+install_name_tool -change @rpath/libswresample.$SWRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavdevice.$AVDEVICE_VERSION.dylib
+install_name_tool -change @rpath/libavfilter.$AVFILTER_VERSION.dylib @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavdevice.$AVDEVICE_VERSION.dylib
+install_name_tool -change /usr/lib/libiconv.$ICONV_VERSION.dylib @executable_path/../Frameworks/libiconv.$ICONV_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavdevice.$AVDEVICE_VERSION.dylib
+
+install_name_tool -change @rpath/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavfilter.$AVFILTER_VERSION.dylib
+install_name_tool -change @rpath/libswscale.$SWSCALE_VERSION.dylib @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavfilter.$AVFILTER_VERSION.dylib
+install_name_tool -change @rpath/libavresample.$AVRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavfilter.$AVFILTER_VERSION.dylib
+install_name_tool -change @rpath/libavformat.$AVFORMAT_VERSION.dylib @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavfilter.$AVFILTER_VERSION.dylib
+install_name_tool -change @rpath/libavcodec.$AVCODEC_VERSION.dylib @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavfilter.$AVFILTER_VERSION.dylib
+install_name_tool -change @rpath/libswresample.$SWRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavfilter.$AVFILTER_VERSION.dylib
+install_name_tool -change /usr/lib/libiconv.$ICONV_VERSION.dylib @executable_path/../Frameworks/libiconv.$ICONV_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavfilter.$AVFILTER_VERSION.dylib
+
+install_name_tool -change @rpath/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavformat.$AVFORMAT_VERSION.dylib
+install_name_tool -change @rpath/libavcodec.$AVCODEC_VERSION.dylib @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavformat.$AVFORMAT_VERSION.dylib
+install_name_tool -change @rpath/libswresample.$SWRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavformat.$AVFORMAT_VERSION.dylib
+install_name_tool -change /usr/lib/libiconv.$ICONV_VERSION.dylib @executable_path/../Frameworks/libiconv.$ICONV_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavformat.$AVFORMAT_VERSION.dylib
+
+install_name_tool -change @rpath/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib
+install_name_tool -change /usr/lib/libiconv.$ICONV_VERSION.dylib @executable_path/../Frameworks/libiconv.$ICONV_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib
+
+install_name_tool -change /usr/lib/libiconv.$ICONV_VERSION.dylib @executable_path/../Frameworks/libiconv.$ICONV_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libavutil.$AVUTIL_VERSION.dylib
+
+install_name_tool -change @rpath/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib
+install_name_tool -change /usr/lib/libiconv.$ICONV_VERSION.dylib @executable_path/../Frameworks/libiconv.$ICONV_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib
+
+install_name_tool -change @rpath/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libswscale.$SWSCALE_VERSION.dylib
+install_name_tool -change /usr/lib/libiconv.$ICONV_VERSION.dylib @executable_path/../Frameworks/libiconv.$ICONV_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libswscale.$SWSCALE_VERSION.dylib
+
+install_name_tool -id @executable_path/../Frameworks/libiconv.$ICONV_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libiconv.$ICONV_VERSION.dylib
 
 cd $CWD
 cp replace_ffmpeg_paths.sh $BUNDLE_PATH/Contents/Frameworks/
