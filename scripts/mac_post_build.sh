@@ -247,7 +247,6 @@ install_name_tool -change $FFMPEG_FOLDER/libavresample.$AVRESAMPLE_VERSION.dylib
 install_name_tool -change $FFMPEG_FOLDER/libavdevice.$AVDEVICE_VERSION.dylib @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/Versions/$QTAV_VERSION/QtAV
 install_name_tool -change $FFMPEG_FOLDER/libavfilter.$AVFILTER_VERSION.dylib @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/Versions/$QTAV_VERSION/QtAV
 
-
 install_name_tool -change $FFMPEG_FOLDER/libavcodec.$AVCODEC_VERSION.dylib @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
 install_name_tool -change $FFMPEG_FOLDER/libavformat.$AVFORMAT_VERSION.dylib @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
 install_name_tool -change $FFMPEG_FOLDER/libswscale.$SWSCALE_VERSION.dylib @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
@@ -289,6 +288,47 @@ install_name_tool -change $FFMPEG_FOLDER/libswresample.$SWRESAMPLE_VERSION.dylib
 install_name_tool -change $FFMPEG_FOLDER/libavresample.$AVRESAMPLE_VERSION.dylib @executable_path/../Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
 install_name_tool -change $FFMPEG_FOLDER/libavdevice.$AVDEVICE_VERSION.dylib @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
 install_name_tool -change $FFMPEG_FOLDER/libavfilter.$AVFILTER_VERSION.dylib @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libQmlAV.dylib
+
+if [ "$BUILD_MODE" = "DEBUG" ]; then
+    echo "changing ffmpeg search paths (debug)"
+
+    install_name_tool -change @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib_debug @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+    install_name_tool -change @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib_debug @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+    install_name_tool -change @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib_debug @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+    install_name_tool -change @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib_debug @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+    install_name_tool -change @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib_debug @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+    install_name_tool -change @executable_path/../Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib_debug @executable_path/../Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+    install_name_tool -change @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib_debug @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+    install_name_tool -change @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib_debug @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/QtAV
+
+    install_name_tool -change @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib_debug @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/Versions/$QTAV_VERSION/QtAV
+    install_name_tool -change @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib_debug @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/Versions/$QTAV_VERSION/QtAV
+    install_name_tool -change @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib_debug @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/Versions/$QTAV_VERSION/QtAV
+    install_name_tool -change @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib_debug @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/Versions/$QTAV_VERSION/QtAV
+    install_name_tool -change @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib_debug @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/Versions/$QTAV_VERSION/QtAV
+    install_name_tool -change @executable_path/../Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib_debug @executable_path/../Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/Versions/$QTAV_VERSION/QtAV
+    install_name_tool -change @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib_debug @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/Versions/$QTAV_VERSION/QtAV
+    install_name_tool -change @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib_debug @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAV.framework/Versions/$QTAV_VERSION/QtAV
+
+    install_name_tool -change @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib_debug @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+    install_name_tool -change @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib_debug @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+    install_name_tool -change @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib_debug @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+    install_name_tool -change @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib_debug @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+    install_name_tool -change @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib_debug @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+    install_name_tool -change @executable_path/../Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib_debug @executable_path/../Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+    install_name_tool -change @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib_debug @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+    install_name_tool -change @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib_debug @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/QtAVWidgets
+
+    install_name_tool -change @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib_debug @executable_path/../Frameworks/libavcodec.$AVCODEC_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/Versions/$QTAV_VERSION/QtAVWidgets
+    install_name_tool -change @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib_debug @executable_path/../Frameworks/libavformat.$AVFORMAT_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/Versions/$QTAV_VERSION/QtAVWidgets
+    install_name_tool -change @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib_debug @executable_path/../Frameworks/libswscale.$SWSCALE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/Versions/$QTAV_VERSION/QtAVWidgets
+    install_name_tool -change @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib_debug @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/Versions/$QTAV_VERSION/QtAVWidgets
+    install_name_tool -change @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib_debug @executable_path/../Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/Versions/$QTAV_VERSION/QtAVWidgets
+    install_name_tool -change @executable_path/../Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib_debug @executable_path/../Frameworks/libavresample.$AVRESAMPLE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/Versions/$QTAV_VERSION/QtAVWidgets
+    install_name_tool -change @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib_debug @executable_path/../Frameworks/libavdevice.$AVDEVICE_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/Versions/$QTAV_VERSION/QtAVWidgets
+    install_name_tool -change @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib_debug @executable_path/../Frameworks/libavfilter.$AVFILTER_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/QtAVWidgets.framework/Versions/$QTAV_VERSION/QtAVWidgets
+fi
+
 
 install_name_tool -change @rpath/libavutil.$AVUTIL_VERSION.dylib @executable_path/../Frameworks/libavutil.$AVUTIL_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib
 install_name_tool -change /usr/lib/libiconv.$ICONV_VERSION.dylib @executable_path/../Frameworks/libiconv.$ICONV_VERSION.dylib $BUNDLE_PATH/Contents/Frameworks/libswresample.$SWRESAMPLE_VERSION.dylib
