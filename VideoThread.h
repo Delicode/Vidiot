@@ -70,7 +70,7 @@ public:
 public slots:
     void process();
 
-    void updateSourceList();
+    void updateSourceList(bool reset = false);
     void setSource(QString sourcename);
     void stop();
     void setResolution(QString resolution_str);
@@ -114,7 +114,6 @@ signals:
 
 private:
     QString resolution;
-
     bool ping_required;
 };
 

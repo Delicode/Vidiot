@@ -229,6 +229,8 @@ int main(int argc, char *argv[])
         QObject::connect(&thread.processor, SIGNAL(resolutionsChanged(QStringList)), videoview, SLOT(receiveResolutionList(QStringList)));
         videoview->setMainView(view);
 
+        thread.processor.updateSourceList(true);
+
 #ifdef WIN32
         QObject::connect(&fr, SIGNAL(sendFeed(unsigned int, int, int)), &FeedOutput::instance(), SLOT(sendTexture(uint,int,int)));
         QObject::connect(&thread.processor, SIGNAL(sendFeed(uint,int,int,bool)), &FeedOutput::instance(), SLOT(sendTexture(uint,int,int,bool)));
