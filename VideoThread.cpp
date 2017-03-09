@@ -51,14 +51,29 @@
         QStringList deviceNames;
 
         ICreateDevEnum *pDevEnum;
+
+        // CoInitializeEx must be called "at least once", but apparently can be called multiple times?
+        DWORD com_param = COINIT_APARTMENTTHREADED;
+        DWORD ret = CoInitializeEx(NULL, com_param);
+        if (ret != S_OK && ret != S_FALSE)
+        {
+            qDebug() << "Error initializing COM library: " << __LINE__ << ", " << ret;
+            return deviceNames;
+        }
         HRESULT hr = CoCreateInstance(CLSID_SystemDeviceEnum,0,CLSCTX_INPROC_SERVER,IID_ICreateDevEnum,(void**)&pDevEnum);
         if(FAILED(hr))
+        {
+            qDebug() << "error calling CoCreateInstance in listDevices(): " << __LINE__ << ", "<< hr;
             return deviceNames;
+        }
+
+        E_POINTER;
         IEnumMoniker *pEnum;
         hr = pDevEnum->CreateClassEnumerator(CLSID_VideoInputDeviceCategory,&pEnum,0);
 
         if(FAILED(hr) || pEnum == NULL)
         {
+            qDebug() << "Error calling CreateClassEnumerator in listDevices() " << __LINE__ << ", " << hr;
             return deviceNames;
         }
         IMoniker *pMoniker = NULL;
@@ -274,7 +289,7 @@ CaptureProcessor::~CaptureProcessor()
     if(uploader) delete uploader;
 }
 
-void CaptureProcessor::updateSourceList()
+void CaptureProcessor::updateSourceList(bool reset)
 {
     if(!main_view)
         return;
@@ -301,7 +316,7 @@ void CaptureProcessor::updateSourceList()
         sourcelist.append(recent_files);
     }
 
-    if (sourcelist != current_sourcelist)
+    if (reset || sourcelist != current_sourcelist)
         emit sourcesListUpdate(sourcelist);
 
     current_sourcelist = sourcelist;
@@ -629,8 +644,6 @@ void CaptureProcessor::setMainView(QQuickView *mv)
     if (main_view)
         main_view->rootContext()->setContextProperty("resolutionlist", current_resolutionlist);
 }
-
-
 
 CaptureThread::CaptureThread() : QThread()
 {
